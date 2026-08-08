@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Upload PDF | MKG Coaching Classes</title>
+
+<link rel="stylesheet" href="Style.css">
+</head>
+
+<body>
+
+<h1 style="text-align:center;margin-top:30px;">
+📄 PDF Upload
+</h1>
+
+<div class="card" style="max-width:500px;margin:30px auto;">
+
+<h3>Upload PDF Notes</h3>
+
+<input
+type="file"
+id="pdfFile"
+accept=".pdf">
+
+<br><br>
+
+<button class="btn" id="uploadPDF">
+📤 Upload PDF
+</button>
+
+</div>
+
+<p style="text-align:center;">
+<a href="admin.html" class="btn">
+⬅ Back to Admin Panel
+</a>
+</p>
+
+<script type="module">
+
+import { app } from "./firebase.js";
+
+import {
+getStorage,
+ref,
+uploadBytes,
+getDownloadURL
+} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-storage.js";
+
+import {
+getFirestore,
+collection,
+addDoc,
+serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+
+const storage = getStorage(app);
+const db = getFirestore(app);
+
+document.getElementById("uploadPDF").addEventListener("click", async () => {
+
+const file = document.getElementById("pdfFile").files[0];
+
+if (!file){
+
+alert("पहले PDF चुनें");
+
+return;
+
+}
+
+try{
+
+const storageRef = ref(storage,"pdf/"+file.name);
+
+await uploadBytes(storageRef,file);
+
+const url = await getDownloadURL(storageRef);
+
+await addDoc(collection(db,"notes"),{
+
+name:file.name,
+
+url:url,
+
+createdAt:serverTimestamp()
+
+});
+
+alert("✅ PDF सफलतापूर्वक Upload हो गया");
+
+document.getElementById("pdfFile").value="";
+
+}catch(error){
+
+console.error(error);
+
+alert("❌ PDF Upload Failed");
+
+}
+
+});
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel | MKG Coaching Classes</title>
+
+<link rel="stylesheet" href="Style.css">
+</head>
+
+<body>
+
+<h1 style="text-align:center;margin-top:40px;">
+🛠 Admin Panel
+</h1>
+
+<div style="max-width:700px;margin:30px auto;" class="cards">
+
+<div class="card">
+<h3>📢 Notice</h3>
+<p>Notice Update</p>
+
+<a href="notice.html" class="btn">
+Open Notice
+</a>
+
+</div>
+<div class="card">
+<h3>📄 PDF Notes</h3>
+<p>Upload PDF Notes</p>
+
+<a href="pdf-update.html" class="btn">
+Open Notes
+</a>
+</div>
+
+<a href="pdf-upload.html" class="btn">
+Upload PDF
+</a>
+</div>
+
+<div class="card">
+<h3>🏆 Results</h3>
+<p>Update Results</p>
+
+<a href="result-update.html" class="btn">
+Open Results
+</a>
+
+</div>
+
+<div class="card">
+<h3>📸 Gallery</h3>
+<p>Upload Photos</p>
+
+<a href="gallery-upload.html" class="btn">
+📤 Upload Gallery
+</a>
+
+</div>
+<div class="card">
+<h3>👨‍🎓 Students</h3>
+<p>Manage Students</p>
+
+<a href="student.html" class="btn">
+Open Students
+</a>
+
+</div>
+
+<div class="card">
+<h3>⚙ Settings</h3>
+<p>Website Settings</p>
+</div>
+
+</div>
+<p style="text-align:center;margin-top:20px;">
+<button onclick="logout()" class="btn">
+🚪 Logout
+</button>
+</p>
+<p style="text-align:center;">
+<a href="index.html" class="btn">🏠 Home</a>
+</p>
+<script type="module">
+
+import { app } from "./firebase.js";
+
+import {
+getAuth,
+signOut
+} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+
+const auth=getAuth(app);
+
+function logout(){
+
+signOut(auth).then(()=>{
+
+alert("Logout Successful");
+
+window.location.href="admin-login.html";
+
+});
+
+}
+
+window.logout=logout;
+
+</script>
+</body>
+</html>

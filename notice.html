@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Notice | MKG Coaching Classes</title>
+
+<link rel="stylesheet" href="Style.css">
+
+<style>
+
+body{
+margin:0;
+padding:20px;
+font-family:Arial,sans-serif;
+background:linear-gradient(135deg,#06264b,#0b5a88);
+color:white;
+}
+
+h1{
+text-align:center;
+font-size:42px;
+color:#FFD700;
+}
+
+.notice-card{
+
+max-width:900px;
+margin:30px auto;
+padding:25px;
+border-radius:20px;
+background:rgba(255,255,255,.12);
+backdrop-filter:blur(10px);
+box-shadow:0 10px 25px rgba(0,0,0,.4);
+
+}
+
+.notice-card h2{
+
+color:#FFD700;
+
+}
+
+.notice-card p{
+
+font-size:20px;
+line-height:1.8;
+
+}
+
+.btn{
+
+display:inline-block;
+margin-top:25px;
+padding:15px 30px;
+background:#FFD700;
+color:#06264b;
+text-decoration:none;
+font-weight:bold;
+border-radius:12px;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>📢 Notice Board</h1>
+
+<div id="noticeBox">
+
+<div class="notice-card">
+
+<h2>Loading...</h2>
+
+<p>Notice Load हो रहा है...</p>
+
+</div>
+
+</div>
+
+<div style="text-align:center;">
+
+<a href="index.html" class="btn">
+
+🏠 Home Page
+
+</a>
+
+</div>
+
+<script type="module">
+
+import { db } from "./firebase.js";
+
+import {
+
+collection,
+
+query,
+
+orderBy,
+
+limit,
+
+getDocs
+
+}
+
+from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+
+const noticeBox=document.getElementById("noticeBox");
+
+async function loadNotice(){
+
+try{
+
+const q=query(
+
+collection(db,"notices"),
+
+orderBy("createdAt","desc"),
+
+limit(1)
+
+);
+
+const snapshot=await getDocs(q);
+
+if(snapshot.empty){
+
+noticeBox.innerHTML=`
+
+<div class="notice-card">
+
+<h2>📢 Notice</h2>
+
+<p>अभी कोई Notice उपलब्ध नहीं है।</p>
+
+</div>
+
+`;
+
+return;
+
+}
+
+snapshot.forEach(doc=>{
+
+const data=doc.data();
+
+noticeBox.innerHTML=`
+
+<div class="notice-card">
+
+<h2>📢 Latest Notice</h2>
+
+<p>${data.text}</p>
+
+</div>
+
+`;
+
+});
+
+}catch(error){
+
+noticeBox.innerHTML=`
+
+<div class="notice-card">
+
+<h2>❌ Error</h2>
+
+<p>Notice Load नहीं हुआ।</p>
+
+</div>
+
+`;
+
+console.log(error);
+
+}
+
+}
+
+loadNotice();
+
+</script>
+
+</body>
+</html>

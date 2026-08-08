@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Results | MKG Coaching Classes</title>
+
+<link rel="stylesheet" href="style.css">
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Poppins,sans-serif;
+}
+
+body{
+background:linear-gradient(135deg,#031b35,#0a4f80,#02172c);
+padding:25px;
+color:white;
+}
+
+.header{
+text-align:center;
+margin-bottom:35px;
+}
+
+.header h1{
+font-size:55px;
+font-weight:900;
+text-shadow:0 5px 15px rgba(0,0,0,.6);
+}
+
+.header span{
+color:#FFD700;
+}
+
+.header h2{
+margin-top:15px;
+color:#FFD700;
+}
+
+.cards{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+gap:25px;
+max-width:1100px;
+margin:auto;
+}
+
+.card{
+padding:30px;
+border-radius:25px;
+background:rgba(255,255,255,.12);
+backdrop-filter:blur(15px);
+border:1px solid rgba(255,255,255,.2);
+box-shadow:0 15px 30px rgba(0,0,0,.4);
+text-align:center;
+transition:.3s;
+}
+
+.card:hover{
+transform:translateY(-10px);
+}
+
+.card h3{
+color:#FFD700;
+margin-bottom:15px;
+}
+
+.card p{
+line-height:1.8;
+}
+
+.btn{
+display:inline-block;
+margin-top:35px;
+padding:16px 32px;
+background:linear-gradient(145deg,#FFD700,#ffb800);
+color:#06264b;
+text-decoration:none;
+font-weight:900;
+border-radius:15px;
+box-shadow:0 10px 20px rgba(0,0,0,.4);
+}
+
+.bottom{
+text-align:center;
+}
+
+@media(max-width:600px){
+
+.header h1{
+font-size:40px;
+}
+
+.btn{
+width:90%;
+}
+
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+
+<h1>
+MKG <span>COACHING CLASSES</span>
+</h1>
+
+<h2>
+🏆 Student Results
+</h2>
+
+</div>
+<div class="card" style="max-width:600px;margin:0 auto 30px;">
+
+<h3>🔎 अपना Result खोजें</h3>
+
+<input
+id="searchName"
+type="text"
+placeholder="विद्यार्थी का नाम लिखें"
+style="width:100%;padding:14px;margin:8px 0;border-radius:10px;border:1px solid #ccc;"
+>
+
+<input
+id="searchClass"
+type="text"
+placeholder="कक्षा लिखें"
+style="width:100%;padding:14px;margin:8px 0;border-radius:10px;border:1px solid #ccc;"
+>
+
+<button class="btn" id="searchResult">
+🔎 Search Result
+</button>
+
+</div>
+<div class="cards" id="resultList">
+
+<div class="card">
+<h3>🎓 Result 2026</h3>
+<p>
+Results Loading...
+</p>
+</div>
+
+</div>
+
+</div>
+
+<div class="bottom">
+
+<a href="index.html" class="btn">
+🏠 Home Page
+</a>
+
+</div>
+<script type="module">
+import { db } from "./firebase.js";
+
+import {
+  collection,
+  getDocs,
+  query,
+  orderBy
+} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+
+const resultList = document.getElementById("resultList");
+
+async function loadResults() {
+
+  try {
+
+    const resultsRef = collection(db, "results");
+
+    const resultsQuery = query(
+      resultsRef,
+      orderBy("percentage", "desc")
+    );
+
+    const snapshot = await getDocs(resultsQuery);
+
+    resultList.innerHTML = "";
+
+    if (snapshot.empty) {
+
+      resultList.innerHTML = `
+        <div class="card">
+          <h3>📊 Result</h3>
+          <p>अभी कोई Result उपलब्ध नहीं है।</p>
+        </div>
+      `;
+
+      return;
+    }
+
+    snapshot.forEach((resultDoc) => {
+
+      const data = resultDoc.data();
+
+      const card = document.createElement("div");
+
+      card.className = "card";
+
+      card.innerHTML = `
+        <h3>🎓 ${data.studentName}</h3>
+
+        <p>
+          🏫 कक्षा: ${data.studentClass}
+        </p>
+
+        <p>
+          📝 परीक्षा: ${data.examName}
+        </p>
+
+        <p>
+          📊 अंक: ${data.marks} / ${data.totalMarks}
+        </p>
+
+        <p>
+          🏆 प्रतिशत: ${data.percentage}%
+        </p>
+      `;
+
+      resultList.appendChild(card);
+
+    });
+
+  } catch (error) {
+
+    console.error("Result Load Error:", error);
+
+    resultList.innerHTML = `
+      <div class="card">
+        <h3>❌ Error</h3>
+        <p>Result Load नहीं हो पाया।</p>
+      </div>
+    `;
+
+  }
+
+}
+document.getElementById("searchResult").addEventListener("click", async function () {
+
+  const name = document.getElementById("searchName").value.trim().toLowerCase();
+  const studentClass = document.getElementById("searchClass").value.trim().toLowerCase();
+
+  if (!name || !studentClass) {
+    alert("कृपया नाम और कक्षा दोनों भरें।");
+    return;
+  }
+
+  try {
+    const resultsRef = collection(db, "results");
+    const snapshot = await getDocs(resultsRef);
+
+    resultList.innerHTML = "";
+
+    let found = false;
+
+    snapshot.forEach((resultDoc) => {
+
+      const data = resultDoc.data();
+
+      if (
+        String(data.studentName).toLowerCase() === name &&
+        String(data.studentClass).toLowerCase() === studentClass
+      ) {
+
+        found = true;
+
+        const card = document.createElement("div");
+        card.className = "card";
+
+        card.innerHTML = `
+          <h3>🏆 ${data.studentName}</h3>
+          <p>🏫 कक्षा: ${data.studentClass}</p>
+          <p>📝 परीक्षा: ${data.examName}</p>
+          <p>📊 अंक: ${data.marks} / ${data.totalMarks}</p>
+          <p>🥇 प्रतिशत: ${data.percentage}%</p>
+        `;
+
+        resultList.appendChild(card);
+      }
+    });
+
+    if (!found) {
+      resultList.innerHTML = `
+        <div class="card">
+          <h3>❌ Result नहीं मिला</h3>
+          <p>नाम और कक्षा सही भरें।</p>
+        </div>
+      `;
+    }
+
+  } catch (error) {
+    console.error(error);
+    alert("❌ Result Search नहीं हो पाया।");
+  }
+
+});
+loadResults();
+
+</script>
+</body>
+</html>

@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Result Update | MKG Coaching Classes</title>
+
+<link rel="stylesheet" href="Style.css">
+
+</head>
+
+<body>
+
+<h1 style="text-align:center;margin-top:30px;">
+🏆 Result Update
+</h1>
+
+<div class="card" style="max-width:650px;margin:30px auto;">
+
+<h3>📊 Add Student Result</h3>
+
+<input
+id="studentName"
+type="text"
+placeholder="विद्यार्थी का नाम"
+style="width:100%;padding:12px;margin:8px 0;border-radius:10px;">
+
+<input
+id="studentClass"
+type="text"
+placeholder="कक्षा"
+style="width:100%;padding:12px;margin:8px 0;border-radius:10px;">
+
+<input
+id="examName"
+type="text"
+placeholder="परीक्षा का नाम"
+style="width:100%;padding:12px;margin:8px 0;border-radius:10px;">
+
+<input
+id="marks"
+type="number"
+placeholder="प्राप्त अंक"
+style="width:100%;padding:12px;margin:8px 0;border-radius:10px;">
+
+<input
+id="totalMarks"
+type="number"
+placeholder="कुल अंक"
+style="width:100%;padding:12px;margin:8px 0;border-radius:10px;">
+
+<br><br>
+
+<button class="btn" id="saveResult">
+💾 Save Result
+</button>
+
+</div>
+
+<div class="card" style="max-width:700px;margin:30px auto;">
+
+<h3>📋 Saved Results</h3>
+
+<div id="resultList">
+
+Loading...
+
+</div>
+
+</div>
+
+<p style="text-align:center;">
+
+<a href="admin.html" class="btn">
+
+⬅ Back to Admin Panel
+
+</a>
+
+</p>
+
+<script type="module">
+
+import { db } from "./firebase.js";
+
+import {
+
+collection,
+addDoc,
+serverTimestamp,
+getDocs,
+query,
+orderBy,
+deleteDoc,
+doc
+
+}
+
+from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+// SAVE RESULT
+
+document.getElementById("saveResult").addEventListener("click", async () => {
+
+const studentName=document.getElementById("studentName").value.trim();
+const studentClass=document.getElementById("studentClass").value.trim();
+const examName=document.getElementById("examName").value.trim();
+const marks=document.getElementById("marks").value;
+const totalMarks=document.getElementById("totalMarks").value;
+
+if(!studentName||!studentClass||!examName||!marks||!totalMarks){
+
+alert("कृपया सभी जानकारी भरें।");
+
+return;
+
+}
+
+const percentage=((Number(marks)/Number(totalMarks))*100).toFixed(2);
+
+try{
+
+await addDoc(collection(db,"results"),{
+
+studentName,
+studentClass,
+examName,
+marks:Number(marks),
+totalMarks:Number(totalMarks),
+percentage:Number(percentage),
+createdAt:serverTimestamp()
+
+});
+
+alert("✅ Result सफलतापूर्वक Save हो गया!");
+
+document.getElementById("studentName").value="";
+document.getElementById("studentClass").value="";
+document.getElementById("examName").value="";
+document.getElementById("marks").value="";
+document.getElementById("totalMarks").value="";
+
+loadResults();
+
+}catch(error){
+
+console.error(error);
+
+alert("❌ Result Save नहीं हुआ।");
+
+}
+
+});
+
+
+// LOAD RESULTS
+
+async function loadResults(){
+
+const resultList=document.getElementById("resultList");
+
+resultList.innerHTML="";
+try{
+
+const q=query(
+collection(db,"results"),
+orderBy("percentage","desc")
+);
+
+const snapshot=await getDocs(q);
+
+if(snapshot.empty){
+
+resultList.innerHTML="<p>अभी कोई Result उपलब्ध नहीं है।</p>";
+return;
+
+}
+
+snapshot.forEach((resultDoc)=>{
+
+const data=resultDoc.data();
+
+const box=document.createElement("div");
+
+box.className="card";
+
+box.style.marginBottom="15px";
+
+box.innerHTML=`
+<h3>🏆 ${data.studentName}</h3>
+<p>🏫 कक्षा : ${data.studentClass}</p>
+<p>📝 परीक्षा : ${data.examName}</p>
+<p>📊 अंक : ${data.marks} / ${data.totalMarks}</p>
+<p>🥇 प्रतिशत : ${data.percentage}%</p>
+`;
+
+const deleteBtn=document.createElement("button");
+
+deleteBtn.className="btn";
+deleteBtn.style.background="#dc3545";
+deleteBtn.style.marginTop="10px";
+deleteBtn.textContent="🗑 Delete";
+
+deleteBtn.onclick=async()=>{
+
+if(confirm("क्या आप यह Result Delete करना चाहते हैं?")){
+
+try{
+
+await deleteDoc(doc(db,"results",resultDoc.id));
+
+alert("🗑 Result Delete हो गया।");
+
+loadResults();
+
+}catch(error){
+
+console.error(error);
+
+alert("❌ Result Delete नहीं हुआ।");
+
+}
+
+}
+
+};
+
+box.appendChild(deleteBtn);
+
+resultList.appendChild(box);
+
+});
+
+}catch(error){
+
+console.error(error);
+
+resultList.innerHTML="<p>❌ Result Load नहीं हुआ।</p>";
+
+}
+
+}
+
+loadResults();
+
+</script>
+
+</body>
+</html>

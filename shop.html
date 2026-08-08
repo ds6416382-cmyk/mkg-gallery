@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shop | MKG Coaching Classes</title>
+
+<link rel="stylesheet" href="style.css">
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Poppins,sans-serif;
+}
+
+body{
+background:linear-gradient(135deg,#031b35,#0b4f80,#02162c);
+padding:25px;
+color:#fff;
+}
+
+.header{
+text-align:center;
+margin-bottom:35px;
+}
+
+.header h1{
+font-size:55px;
+font-weight:900;
+text-shadow:0 6px 18px rgba(0,0,0,.6);
+}
+
+.header span{
+color:#FFD700;
+}
+
+.header h2{
+margin-top:15px;
+color:#FFD700;
+}
+
+.products{
+max-width:1200px;
+margin:auto;
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+gap:25px;
+}
+
+.product{
+padding:30px;
+text-align:center;
+border-radius:25px;
+background:rgba(255,255,255,.12);
+backdrop-filter:blur(15px);
+border:1px solid rgba(255,255,255,.2);
+box-shadow:0 15px 30px rgba(0,0,0,.45);
+transition:.35s;
+}
+
+.product:hover{
+transform:translateY(-10px) scale(1.03);
+}
+
+.icon{
+font-size:60px;
+margin-bottom:15px;
+}
+
+.product h3{
+color:#FFD700;
+margin-bottom:15px;
+}
+
+.product p{
+line-height:1.8;
+}
+
+.btn{
+display:inline-block;
+margin-top:35px;
+padding:16px 34px;
+background:linear-gradient(145deg,#FFD700,#ffb800);
+color:#06264b;
+text-decoration:none;
+font-weight:900;
+border-radius:16px;
+box-shadow:0 10px 20px rgba(0,0,0,.4);
+}
+
+.bottom{
+text-align:center;
+}
+
+@media(max-width:600px){
+.header h1{
+font-size:40px;
+}
+.btn{
+width:90%;
+}
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+
+<h1>
+MKG <span>COACHING CLASSES</span>
+</h1>
+
+<h2>📚 Book Shop</h2>
+
+</div>
+
+<div class="products">
+
+<div class="product">
+<div class="icon">📘</div>
+<h3>NCERT Books</h3>
+<p>कक्षा 6 से 12 तक सभी NCERT पुस्तकें उपलब्ध।</p>
+</div>
+
+<div class="product">
+<div class="icon">📝</div>
+<h3>Notes</h3>
+<p>सभी विषयों के PDF एवं Printed Notes उपलब्ध।</p>
+</div>
+
+<div class="product">
+<div class="icon">📖</div>
+<h3>Test Series</h3>
+<p>Practice Papers एवं Model Papers उपलब्ध।</p>
+</div>
+
+<div class="product">
+<div class="icon">🎒</div>
+<h3>Study Material</h3>
+<p>Complete Coaching Study Material उपलब्ध।</p>
+</div>
+
+</div>
+
+<div class="bottom">
+
+<a href="tel:9664077174" class="btn">
+📞 Book Order
+</a>
+
+<br><br>
+
+<a href="index.html" class="btn">
+🏠 Home Page
+</a>
+
+</div>
+
+</body>
+</html>

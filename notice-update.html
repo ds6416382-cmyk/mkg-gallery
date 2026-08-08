@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notice Update | MKG Coaching Classes</title>
+
+<link rel="stylesheet" href="Style.css">
+
+<style>
+body{
+font-family:Arial,sans-serif;
+background:#f5f7fa;
+margin:0;
+padding:20px;
+}
+
+.container{
+max-width:700px;
+margin:auto;
+}
+
+.card{
+background:#fff;
+padding:20px;
+border-radius:15px;
+box-shadow:0 5px 15px rgba(0,0,0,.15);
+margin-bottom:20px;
+}
+
+textarea{
+width:100%;
+padding:12px;
+border-radius:10px;
+font-size:16px;
+resize:none;
+}
+
+.btn{
+padding:12px 25px;
+border:none;
+border-radius:10px;
+cursor:pointer;
+font-weight:bold;
+background:#0d6efd;
+color:#fff;
+}
+
+.btn:hover{
+background:#0b5ed7;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1 style="text-align:center;">
+📢 Notice Update
+</h1>
+
+<div class="card">
+
+<h3>New Notice</h3>
+
+<textarea
+id="notice"
+rows="6"
+placeholder="यहाँ Notice लिखें..."></textarea>
+
+<br><br>
+
+<button
+class="btn"
+id="saveNotice">
+
+💾 Save Notice
+
+</button>
+
+</div>
+
+<div class="card">
+
+<h3>📋 Saved Notices</h3>
+
+<div id="noticeList">
+Loading...
+</div>
+
+</div>
+
+<p style="text-align:center;">
+<a href="admin.html" class="btn">
+⬅ Back
+</a>
+</p>
+
+<script type="module">
+
+import { db } from "./firebase.js";
+
+import{
+collection,
+addDoc,
+getDocs,
+query,
+orderBy,
+deleteDoc,
+doc,
+serverTimestamp
+}
+from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+// SAVE NOTICE
+
+document.getElementById("saveNotice").addEventListener("click", async () => {
+
+const notice=document.getElementById("notice").value.trim();
+
+if(!notice){
+
+alert("कृपया Notice लिखें।");
+
+return;
+
+}
+
+try{
+
+const oldNotices=await getDocs(collection(db,"notices"));
+
+for(const item of oldNotices.docs){
+
+await deleteDoc(doc(db,"notices",item.id));
+
+}
+
+await addDoc(collection(db,"notices"),{
+
+text:notice,
+
+createdAt:serverTimestamp()
+
+});
+
+alert("✅ Notice सफलतापूर्वक Save हो गया!");
+
+document.getElementById("notice").value="";
+
+loadNotices();
+
+}catch(error){
+
+console.error(error);
+
+alert("❌ Notice Save नहीं हुआ।");
+
+}
+
+});
+
+
+// LOAD NOTICE
+
+async function loadNotices(){
+
+const noticeList=document.getElementById("noticeList");
+
+try{
+
+const q=query(
+
+collection(db,"notices"),
+
+orderBy("createdAt","desc")
+
+);
+
+const snapshot=await getDocs(q);
+
+noticeList.innerHTML="";
+
+if(snapshot.empty){
+
+noticeList.innerHTML="<p>अभी कोई Notice नहीं है।</p>";
+
+return;
+
+}
+snapshot.forEach((noticeDoc)=>{
+
+const data=noticeDoc.data();
+
+const box=document.createElement("div");
+
+box.style.background="#f8f9fa";
+box.style.padding="15px";
+box.style.margin="10px 0";
+box.style.borderRadius="10px";
+box.style.border="1px solid #ddd";
+
+box.innerHTML=`
+<p style="font-weight:bold;">📢 ${data.text}</p>
+`;
+
+const deleteBtn=document.createElement("button");
+
+deleteBtn.className="btn";
+deleteBtn.style.background="#dc3545";
+deleteBtn.textContent="🗑 Delete";
+
+deleteBtn.onclick=async()=>{
+
+const total=(await getDocs(collection(db,"notices"))).size;
+
+if(total<=1){
+
+alert("कम से कम एक Notice रहना चाहिए।");
+
+return;
+
+}
+
+if(confirm("क्या आप यह Notice Delete करना चाहते हैं?")){
+
+await deleteDoc(doc(db,"notices",noticeDoc.id));
+
+alert("🗑 Notice Delete हो गया।");
+
+loadNotices();
+
+}
+
+};
+
+box.appendChild(deleteBtn);
+
+noticeList.appendChild(box);
+
+});
+
+}catch(error){
+
+console.log(error);
+
+noticeList.innerHTML="<p>❌ Notice Load नहीं हुआ।</p>";
+
+}
+
+}
+
+loadNotices();
+
+</script>
+
+</body>
+
+</html>

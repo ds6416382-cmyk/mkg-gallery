@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Video Upload | MKG Coaching Classes</title>
+
+<link rel="stylesheet" href="Style.css">
+
+<style>
+body{
+font-family:Poppins,sans-serif;
+background:#f5f7fb;
+padding:20px;
+}
+
+.card{
+max-width:600px;
+margin:auto;
+background:white;
+padding:20px;
+border-radius:15px;
+box-shadow:0 5px 15px rgba(0,0,0,.15);
+}
+
+input,select{
+width:100%;
+padding:12px;
+margin:10px 0;
+border-radius:8px;
+border:1px solid #ccc;
+}
+
+.btn{
+padding:12px 20px;
+background:#0b3d91;
+color:white;
+border:none;
+border-radius:8px;
+cursor:pointer;
+width:100%;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="card">
+
+<h2>🎥 Upload Video</h2>
+
+<select id="className">
+<option value="">Select Class</option>
+<option>Class 6</option>
+<option>Class 7</option>
+<option>Class 8</option>
+<option>Class 9</option>
+<option>Class 10</option>
+<option>Class 11</option>
+<option>Class 12</option>
+</select>
+
+<input
+type="text"
+id="subject"
+placeholder="Subject Name">
+
+<input
+type="text"
+id="videoLink"
+placeholder="YouTube Video Link">
+
+<button
+class="btn"
+id="saveVideo">
+Save Video
+</button>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Login | MKG Coaching Classes</title>
+
+<link rel="stylesheet" href="Style.css">
+</head>
+
+<body>
+
+<h1 style="text-align:center;margin-top:40px;">
+🔐 Admin Login
+</h1>
+
+<div style="max-width:400px;margin:40px auto;padding:30px;background:#fff;border-radius:20px;box-shadow:0 5px 20px rgba(0,0,0,.2);">
+
+<input type="text" id="adminuser" placeholder="Admin ID"
+style="width:100%;padding:15px;margin-bottom:15px;">
+
+<input type="password" id="adminpass" placeholder="Password"
+style="width:100%;padding:15px;margin-bottom:20px;">
+
+<button onclick="adminLogin()"
+style="width:100%;padding:15px;background:#0a2a66;color:white;border:none;border-radius:10px;font-size:18px;">
+Admin Login
+</button>
+
+</div>
+
+<script>
+function adminLogin(){
+
+let user = document.getElementById("adminuser").value;
+let pass = document.getElementById("adminpass").value;
+
+if(user=="admin" && pass=="12345"){
+window.location="admin.html";
+}else{
+alert("Wrong Admin ID or Password");
+}
+
+}
+</script>
+
+</body>
+</html>

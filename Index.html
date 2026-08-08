@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MKG Coaching Classes | दिगोद जागीर</title>
+
+<link rel="stylesheet" href="Style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700;800&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}
+html{scroll-behavior:smooth}
+body{background:linear-gradient(135deg,#eef4ff,#f8fbff);color:#10233f;overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;background:radial-gradient(circle at 10% 10%,rgba(255,215,0,.12),transparent 25%),radial-gradient(circle at 90% 30%,rgba(0,120,255,.10),transparent 28%);z-index:-1}
+
+.notice-bar{background:linear-gradient(90deg,#ffd000,#fff0a0,#ffd000);color:#002b5b;padding:10px;font-weight:800;box-shadow:0 4px 15px rgba(0,0,0,.18)}
+
+header{
+background:linear-gradient(145deg,#002653,#073f78);
+padding:14px 5%;display:flex;justify-content:space-between;align-items:center;
+position:sticky;top:0;z-index:999;box-shadow:0 10px 30px rgba(0,32,75,.35)
+}
+.logo{display:flex;align-items:center;gap:12px;color:#fff;font-size:28px;font-weight:800;text-shadow:0 3px 8px #0008}
+.logo img{height:58px;width:58px;object-fit:cover;border-radius:14px;box-shadow:0 8px 18px #0007}
+.logo span{color:#ffd700}
+nav{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+nav a{color:#fff;text-decoration:none;padding:9px 12px;border-radius:12px;font-weight:600;transition:.3s}
+nav a:hover{background:#ffd700;color:#002b5b;transform:translateY(-2px);box-shadow:0 5px 15px #0005}
+
+.btn,.premium-btn{
+display:inline-block;padding:15px 28px;border-radius:18px;background:linear-gradient(145deg,#fff,#dfeaff);
+color:#002b5b;text-decoration:none;font-weight:800;border:1px solid #ffffff99;
+box-shadow:8px 8px 18px #001c3b55,-5px -5px 12px #ffffffaa;transition:.3s
+}
+.btn:hover,.premium-btn:hover{transform:translateY(-5px) scale(1.02);box-shadow:12px 15px 25px #001c3b66}
+header>.btn{background:linear-gradient(145deg,#ffe52b,#ffc400);white-space:nowrap}
+
+.slider{width:100%;overflow:hidden;background:#062f59}
+.slide{width:100%;max-height:420px;object-fit:cover;display:block}
+
+.premium-hero{
+min-height:90vh;display:flex;align-items:center;justify-content:center;text-align:center;
+padding:70px 5%;color:#fff;
+background:linear-gradient(135deg,#052b50,#0b527b 50%,#06345d);
+position:relative;overflow:hidden
+}
+.premium-hero:before,.premium-hero:after{content:"";position:absolute;border-radius:50%;filter:blur(3px);opacity:.25}
+.premium-hero:before{width:350px;height:350px;background:#ffd700;top:-120px;left:-120px}
+.premium-hero:after{width:400px;height:400px;background:#00aaff;bottom:-180px;right:-120px}
+.hero-content{width:min(100%,1000px);position:relative;z-index:2}
+.hero-badge{
+display:inline-block;padding:13px 28px;border-radius:50px;background:linear-gradient(145deg,#ffe52b,#ffbf00);
+color:#10233f;font-size:20px;font-weight:800;box-shadow:0 10px 25px #0006, inset 0 2px 5px #fff9;margin-bottom:25px
+}
+.hero h1{font-size:clamp(48px,8vw,86px);line-height:1;text-shadow:0 8px 0 #8a6500,0 15px 25px #0008}
+.hero h1 span{display:block;color:#ffd700}
+.hero-tagline{font-size:clamp(20px,3vw,30px);font-weight:700;margin:25px 0}
+.hero-poster{
+display:inline-block;padding:10px;border-radius:28px;background:linear-gradient(145deg,#fff,#ffd000,#fff);
+box-shadow:0 20px 45px #0008,0 0 35px #ffd70055
+}
+.hero-poster img{display:block;width:340px;max-width:88vw;border-radius:20px}
+.hero-features{font-size:20px;font-weight:700;margin:25px auto;max-width:850px}
+.director-3d{
+display:inline-block;padding:15px 28px;border:1px solid #ffd700;border-radius:18px;
+background:#001d38aa;box-shadow:inset 0 0 20px #0008,0 10px 25px #0006;font-size:22px
+}
+.director-3d strong{color:#ffd700}
+.hero-buttons{display:flex;flex-wrap:wrap;justify-content:center;gap:16px;margin-top:30px}
+.premium-btn{min-width:210px}
+.whatsapp-btn{background:linear-gradient(145deg,#48ff7b,#0bd95c);color:#063b20}
+
+section{padding:70px 6%}
+section h2{font-size:clamp(28px,5vw,44px);text-align:center;margin-bottom:35px;color:#062e58;text-shadow:0 3px 0 #fff}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:25px}
+.card{
+background:linear-gradient(145deg,#fff,#eaf2ff);padding:30px;border-radius:25px;text-align:center;
+border:1px solid #fff;box-shadow:12px 14px 28px #18385a22,-7px -7px 18px #fff;
+transition:.3s
+}
+.card:hover{transform:translateY(-8px) rotateX(2deg);box-shadow:15px 20px 35px #18385a33}
+.card h3{color:#06345f;margin-bottom:12px}
+.card p{line-height:1.7}
+
+.director-box{display:flex;align-items:center;gap:30px;max-width:900px;margin:auto}
+.director-box img{width:180px;height:180px;object-fit:cover;border-radius:25px;box-shadow:12px 15px 30px #0004}
+.director-box h3{font-size:30px;color:#d39d00;margin:8px 0}
+
+.map-frame{width:100%;height:350px;border:0;border-radius:25px;box-shadow:12px 15px 30px #18385a33}
+
+.gallery-img{width:100%;border-radius:18px;display:block;box-shadow:0 10px 20px #0003}
+
+footer{background:linear-gradient(145deg,#001d3c,#063e6d);color:#fff;padding:45px 6%;text-align:center;box-shadow:0 -12px 30px #0002}
+footer a{color:#fff}
+
+.floating-whatsapp,.top-btn{
+position:fixed;right:20px;width:58px;height:58px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+text-decoration:none;font-size:28px;z-index:1000;box-shadow:0 10px 25px #0005
+}
+.floating-whatsapp{bottom:22px;background:#18d968;color:#fff}
+.top-btn{bottom:92px;background:#06366b;color:#fff}
+
+#loader{
+position:fixed;inset:0;background:#002b5b;display:flex;align-items:center;justify-content:center;color:#ffd700;
+z-index:9999;animation:hideLoader 1.2s forwards;animation-delay:.7s
+}
+#loader h1{text-shadow:0 5px 15px #000}
+@keyframes hideLoader{to{opacity:0;visibility:hidden}}
+
+@media(max-width:900px){
+header{flex-wrap:wrap;gap:15px}
+nav{width:100%}
+header>.btn{display:none}
+}
+@media(max-width:600px){
+.logo{font-size:22px}.logo img{height:50px;width:50px}
+nav a{font-size:14px;padding:7px 8px}
+section{padding:50px 5%}
+.hero-buttons{flex-direction:column;align-items:center}
+.premium-btn{width:min(100%,330px)}
+.director-box{flex-direction:column;text-align:center}
+}
+</style>
+</head>
+
+<body>
+
+<div class="notice-bar" id="liveNotice">
+  <marquee id="liveNotice">
+    📢 नए प्रवेश प्रारम्भ | 📚 कक्षा 6 से 12 तक Admission Open | 📝 Weekly Test हर रविवार | 📞 संपर्क करें: 9664077174
+  </marquee>
+</div>
+
+<header>
+<div class="logo">
+<img src="images/Logo.png" alt="MKG Logo">
+<span>MKG Coaching Classes</span>
+</div>
+
+<button id="menuBtn" onclick="toggleMenu()">☰</button>
+
+<nav id="menu">
+<a href="index.html">Home</a>
+<a href="about.html">About</a>
+<a href="gallery.html">Gallery</a>
+<a href="notice.html">Notice</a>
+<a href="result.html">Result</a>
+<a href="notes.html">Notes</a>
+<a href="courses.html">Courses</a>
+<a href="admission.html">Admission</a>
+<a href="shop.html">Shop</a>
+<a href="contact.html">Contact</a>
+<a href="login.html">Student Portal</a>
+</nav>
+
+
+</header>
+
+<div class="slider">
+<img class="slide" src="images/Hero.jpg" alt="Hero">
+<img class="slide" src="images/Director.png" alt="Director">
+<img class="slide" src="images/Logo.png" alt="Logo">
+</div>
+
+<section class="premium-hero hero">
+<div class="hero-content">
+<div class="hero-badge">🎓 ADMISSION OPEN 2026–27</div>
+<h1>MKG <span>COACHING CLASSES</span></h1>
+<p class="hero-tagline">दिगोद जागीर का सबसे भरोसेमंद कोचिंग संस्थान</p>
+
+<div class="hero-poster">
+<img src="images/Poster.png" alt="MKG Coaching Classes Poster">
+</div>
+
+<p class="hero-features">✅ कक्षा 6 से 12 तक &nbsp; • &nbsp; सभी विषय &nbsp; • &nbsp; अनुभवी शिक्षक &nbsp; • &nbsp; साप्ताहिक टेस्ट</p>
+
+<div class="director-3d">👨‍🏫 Director : <strong>Mukesh Sir</strong></div>
+
+<div class="hero-buttons">
+<a href="admission.html" class="premium-btn">📝 Admission Now</a>
+<a href="courses.html" class="premium-btn">📚 View Courses</a>
+<a href="tel:9664077174" class="premium-btn">📞 Call Now</a>
+<a href="https://wa.me/919664077174" class="premium-btn whatsapp-btn" target="_blank">💬 WhatsApp</a>
+<a href="login.html" class="premium-btn">
+👨‍🎓 Student Portal
+</a>
+</div>
+</div>
+</section>
+
+<section>
+<h2>🎯 हमारा मिशन</h2>
+<div class="card" style="max-width:900px;margin:auto">
+<p style="font-size:18px">MKG Coaching Classes का उद्देश्य प्रत्येक विद्यार्थी को गुणवत्तापूर्ण शिक्षा, अनुशासन और सही मार्गदर्शन प्रदान करना है, ताकि हर छात्र अपने लक्ष्य को प्राप्त कर सके।</p>
+</div>
+</section>
+
+<section>
+<h2>👨‍🏫 Director</h2>
+<div class="card director-box">
+<img src="images/Director.png" alt="Director Mukesh Sir">
+<div>
+<h3>Mukesh Sir</h3>
+<p>MKG Coaching Classes, दिगोद जागीर में आपका स्वागत है। हमारा उद्देश्य गुणवत्तापूर्ण शिक्षा देकर प्रत्येक विद्यार्थी को सफलता दिलाना है।</p>
+</div>
+</div>
+</section>
+
+<section>
+<h2>🌟 हमारी विशेषताएँ</h2>
+<div class="cards">
+<div class="card"><h3>🏅 Experienced Faculty</h3><p>अनुभवी एवं योग्य शिक्षकों द्वारा गुणवत्तापूर्ण शिक्षा।</p></div>
+<div class="card"><h3>🎯 Online Admission</h3><p>अभी प्रवेश लें और अपनी सफलता की शुरुआत करें।</p><a href="admission.html" class="btn">📝 Apply Now</a></div>
+<div class="card"><h3>📚 अनुभवी शिक्षक</h3><p>सभी विषयों के विशेषज्ञ शिक्षक।</p></div>
+<div class="card"><h3>📝 टेस्ट सीरीज़</h3><p>साप्ताहिक टेस्ट एवं परिणाम।</p></div>
+<div class="card"><h3>🏆 100% मार्गदर्शन</h3><p>हर विद्यार्थी पर विशेष ध्यान।</p></div>
+</div>
+</section>
+
+<section>
+<h2>📍 हमारा स्थान</h2>
+<iframe class="map-frame" src="https://www.google.com/maps?q=Digod+Jagir&output=embed" loading="lazy"></iframe>
+</section>
+
+<section>
+<h2>⏰ Coaching Timing</h2>
+<div class="cards">
+<div class="card"><h3>🕘 Morning Batch</h3><p>07:00 AM - 10:00 AM</p></div>
+<div class="card"><h3>🌇 Evening Batch</h3><p>04:00 PM - 08:00 PM</p></div>
+</div>
+</section>
+<section>
+<h2>🏆 Top Results</h2>
+
+<div class="cards" id="topResults">
+
+<div class="card">
+<h3>Loading...</h3>
+<p>Results Loading...</p>
+</div>
+
+</div>
+
+</section>
+<section>
+  <section>
+
+<h2>📚 Latest Notes</h2>
+
+<div class="cards" id="latestNotes">
+
+<div class="card">
+<h3>Loading...</h3>
+<p>Notes Loading...</p>
+</div>
+
+</div>
+
+</section>
+
+<h2>⭐ Student Reviews</h2>
+<div class="cards">
+<div class="card"><h3>⭐⭐⭐⭐⭐</h3><p>"MKG Coaching Classes में पढ़ाई बहुत अच्छी होती है।"</p><b>- Student</b></div>
+<div class="card"><h3>⭐⭐⭐⭐⭐</h3><p>"यहाँ के शिक्षक बहुत अनुभवी हैं और पूरा मार्गदर्शन देते हैं।"</p><b>- Parent</b></div>
+<div class="card"><h3>⭐⭐⭐⭐⭐</h3><p>"Best Coaching Classes in Digod Jagir."</p><b>- Student</b></div>
+</div>
+</section>
+
+<section>
+<h2>📸 Photo Gallery</h2>
+<div class="cards">
+<div class="card"><img class="gallery-img" src="images/gallery1.jpg" alt="Gallery 1"></div>
+<div class="card"><img class="gallery-img" src="images/gallery2.jpg" alt="Gallery 2"></div>
+<div class="card"><img class="gallery-img" src="images/gallery3.jpg" alt="Gallery 3"></div>
+</div>
+</section>
+
+<section>
+<h2>📞 Contact Us</h2>
+<div class="cards">
+<div class="card"><h3>📍 Address</h3><p>V/P दिगोद जागीर<br>तहसील: छीपाबड़ौद<br>जिला: बारां<br>राजस्थान - 325225</p></div>
+<div class="card"><h3>📞 Mobile</h3><p>9664077174</p><a class="btn" href="tel:9664077174">Call Now</a></div>
+<div class="card"><h3>💬 WhatsApp</h3><p>सीधे WhatsApp पर संपर्क करें।</p><a class="btn" href="https://wa.me/919664077174" target="_blank">Chat Now</a></div>
+</div>
+</section>
+
+<section>
+<h2>❓ Frequently Asked Questions</h2>
+<div class="cards">
+<div class="card"><h3>📚 कौन-कौन सी कक्षाओं की पढ़ाई होती है?</h3><p>कक्षा 6 से 12 तक सभी प्रमुख विषय पढ़ाए जाते हैं।</p></div>
+<div class="card"><h3>📝 Admission कैसे लें?</h3><p>Admission Page पर जाकर Google Form भरें या सीधे Coaching में संपर्क करें।</p></div>
+<div class="card"><h3>📞 अधिक जानकारी कैसे मिलेगी?</h3><p>9664077174 पर कॉल करें या WhatsApp करें।</p></div>
+</div>
+</section>
+<section>
+
+<h2>🏆 हमारे टॉपर्स</h2>
+
+<div class="cards">
+
+<div class="card">
+<img src="images/topper1.jpg"
+style="width:120px;height:120px;border-radius:50%;object-fit:cover;">
+<h3>नाम जल्द आएगा</h3>
+<p>Class 10</p>
+<p>🥇 95%+</p>
+</div>
+
+<div class="card">
+<img src="images/topper2.jpg"
+style="width:120px;height:120px;border-radius:50%;object-fit:cover;">
+<h3>नाम जल्द आएगा</h3>
+<p>Class 12</p>
+<p>🥇 96%+</p>
+</div>
+
+<div class="card">
+<img src="images/topper3.jpg"
+style="width:120px;height:120px;border-radius:50%;object-fit:cover;">
+<h3>नाम जल्द आएगा</h3>
+<p>Class 8</p>
+<p>🥇 98%+</p>
+</div>
+
+</div>
+
+</section>
+<div style="position:fixed;left:15px;bottom:20px;z-index:9999;display:flex;flex-direction:column;gap:10px;">
+
+<a href="https://wa.me/919664077174" target="_blank"
+style="background:#25D366;color:white;padding:12px 15px;border-radius:50%;text-decoration:none;font-size:24px;">
+💬
+</a>
+
+<a href="https://facebook.com/" target="_blank"
+style="background:#1877F2;color:white;padding:12px 15px;border-radius:50%;text-decoration:none;font-size:24px;">
+📘
+</a>
+
+<a href="https://instagram.com/" target="_blank"
+style="background:#E4405F;color:white;padding:12px 15px;border-radius:50%;text-decoration:none;font-size:24px;">
+📷
+</a>
+
+</div>
+<footer>
+<h3>MKG Coaching Classes</h3>
+<p>📍 V/P दिगोद जागीर</p>
+<p>📞 9664077174</p>
+<p>🙏 आपका विश्वास, हमारी पहचान</p>
+<hr style="margin:18px 0">
+<p>© 2026 MKG Coaching Classes. All Rights Reserved.</p>
+</footer>
+
+<a href="https://wa.me/919664077174" class="floating-whatsapp" target="_blank">💬</a>
+<a href="#" class="top-btn">⬆</a>
+
+<div id="loader"><h1>MKG Coaching Classes</h1></div>
+
+<script src="Script.js"></script>
+<script type="module" src="firebase.js"></script>
+<script type="module">
+import { db } from "./firebase.js";
+import {
+  collection,
+  query,
+  orderBy,
+  limit,
+  getDocs
+} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+
+const noticeRef = collection(db, "notices");
+const noticeQuery = query(noticeRef, orderBy("createdAt", "desc"), limit(1));
+
+getDocs(noticeQuery).then((snapshot) => {
+  if (!snapshot.empty) {
+    const latestNotice = snapshot.docs[0].data().text;
+    document.getElementById("liveNotice").textContent = "📢 " + latestNotice;
+  }
+}).catch((error) => {
+  console.error("Notice Load Error:", error);
+});
+</script>
+
+
+getDocs(noticeQuery)
+  .then((snapshot) => {
+
+    if (!snapshot.empty) {
+
+      const latestNotice = snapshot.docs[0].data().text;
+
+      document.getElementById("liveNotice").textContent =
+        "📢 " + latestNotice;
+
+    }
+
+  })
+  .catch((error) => {
+    console.error("Notice Load Error:", error);
+  });
+</script>
+<script type="module">
+import { db } from "./firebase.js";
+
+import {
+collection,
+query,
+orderBy,
+limit,
+getDocs
+} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+
+async function loadTopResults(){
+
+const resultBox=document.getElementById("topResults");
+
+const q=query(
+collection(db,"results"),
+orderBy("percentage","desc"),
+limit(3)
+);
+
+const snap=await getDocs(q);
+
+resultBox.innerHTML="";
+
+snap.forEach(doc=>{
+
+const d=doc.data();
+
+resultBox.innerHTML+=`
+<div class="card">
+<h3>${d.studentName}</h3>
+<p>🏫 Class : ${d.studentClass}</p>
+<p>🏆 ${d.percentage}%</p>
+</div>
+`;
+
+});
+
+}
+
+loadTopResults();
+</script>
+<script type="module">
+const latestNotes = document.getElementById("latestNotes");
+
+latestNotes.innerHTML = `
+<div class="card">
+<h3>📄 PDF Notes</h3>
+<p>जल्द उपलब्ध होंगे...</p>
+<a href="notes.html" class="btn">Open Notes</a>
+</div>
+`;
+</script>
+<div id="popupAdmission" style="
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,.7);
+display:flex;
+justify-content:center;
+align-items:center;
+z-index:99999;
+">
+
+<div style="
+background:#fff;
+padding:30px;
+border-radius:20px;
+text-align:center;
+max-width:350px;
+">
+
+<h2 style="color:#0b3d91;">
+🎓 Admission Open
+</h2>
+
+<p style="color:#333;">
+2026-27 Session के लिए प्रवेश प्रारम्भ हैं।
+</p>
+
+<a href="admission.html" class="btn">
+📝 Apply Now
+</a>
+
+<br><br>
+
+<button onclick="document.getElementById('popupAdmission').style.display='none'"
+class="btn">
+❌ Close
+</button>
+
+</div>
+
+</div>
+</body>
+</html>

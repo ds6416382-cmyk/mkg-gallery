@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Courses | MKG Coaching Classes</title>
+
+<link rel="stylesheet" href="style.css">
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    min-height:100vh;
+    padding:30px 15px 60px;
+    background:
+    radial-gradient(circle at 10% 10%,rgba(255,215,0,.20),transparent 25%),
+    radial-gradient(circle at 90% 80%,rgba(0,130,255,.18),transparent 30%),
+    linear-gradient(135deg,#031b35,#073e69,#02162c);
+    color:white;
+}
+
+.course-header{
+    max-width:1000px;
+    margin:auto;
+    text-align:center;
+    padding:35px 20px;
+}
+
+.logo-title{
+    font-size:clamp(32px,7vw,60px);
+    font-weight:900;
+    color:#fff;
+    text-shadow:
+    0 5px 0 #174b73,
+    0 12px 25px rgba(0,0,0,.7);
+}
+
+.logo-title span{
+    color:#FFD700;
+}
+
+.course-subtitle{
+    margin-top:15px;
+    font-size:clamp(20px,4vw,30px);
+    color:#FFD700;
+    font-weight:800;
+}
+
+.course-line{
+    width:100px;
+    height:5px;
+    margin:20px auto;
+    border-radius:20px;
+    background:linear-gradient(90deg,#FFD700,#fff,#FFD700);
+    box-shadow:0 0 20px rgba(255,215,0,.6);
+}
+
+.course-grid{
+    max-width:1100px;
+    margin:20px auto 40px;
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(270px,1fr));
+    gap:30px;
+}
+
+.course-card{
+    position:relative;
+    padding:35px 25px;
+    text-align:center;
+    border-radius:28px;
+
+    background:
+    linear-gradient(
+        145deg,
+        rgba(255,255,255,.20),
+        rgba(255,255,255,.06)
+    );
+
+    border:1px solid rgba(255,255,255,.25);
+
+    backdrop-filter:blur(15px);
+    -webkit-backdrop-filter:blur(15px);
+
+    box-shadow:
+    15px 18px 35px rgba(0,0,0,.45),
+    inset 0 1px 0 rgba(255,255,255,.25);
+
+    transition:.4s ease;
+    overflow:hidden;
+}
+
+.course-card:before{
+    content:"";
+    position:absolute;
+    width:150px;
+    height:150px;
+    border-radius:50%;
+    background:rgba(255,215,0,.15);
+    top:-70px;
+    right:-70px;
+}
+
+.course-card:hover{
+    transform:
+    translateY(-12px)
+    rotateX(3deg)
+    scale(1.02);
+
+    box-shadow:
+    20px 28px 45px rgba(0,0,0,.55),
+    0 0 30px rgba(255,215,0,.18);
+}
+
+.course-icon{
+    font-size:65px;
+    margin-bottom:15px;
+    filter:drop-shadow(0 8px 8px rgba(0,0,0,.5));
+}
+
+.course-card h3{
+    color:#FFD700;
+    font-size:25px;
+    margin-bottom:15px;
+}
+
+.course-card p{
+    color:#fff;
+    font-size:18px;
+    line-height:1.8;
+}
+
+.subject-list{
+    margin-top:15px;
+    color:#dcecff;
+    line-height:2;
+}
+
+.course-button{
+    display:inline-block;
+    margin:15px 8px;
+    padding:16px 30px;
+    border-radius:18px;
+    text-decoration:none;
+    font-weight:900;
+    font-size:18px;
+
+    color:#06264b;
+
+    background:
+    linear-gradient(
+        145deg,
+        #fff,
+        #dcecff
+    );
+
+    box-shadow:
+    0 8px 0 #91a6bd,
+    0 15px 25px rgba(0,0,0,.4);
+
+    transition:.25s;
+}
+
+.course-button:hover{
+    transform:translateY(-5px);
+    box-shadow:
+    0 13px 0 #91a6bd,
+    0 22px 35px rgba(0,0,0,.5);
+}
+
+.admission-button{
+    background:
+    linear-gradient(
+        145deg,
+        #ffe52b,
+        #ffb900
+    );
+}
+
+.bottom-area{
+    text-align:center;
+    margin-top:20px;
+}
+
+@media(max-width:600px){
+
+    body{
+        padding:15px 10px 50px;
+    }
+
+    .course-header{
+        padding:25px 10px;
+    }
+
+    .course-card{
+        padding:30px 20px;
+    }
+
+    .course-button{
+        display:block;
+        width:90%;
+        margin:15px auto;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="course-header">
+
+<h1 class="logo-title">
+MKG <span>COACHING CLASSES</span>
+</h1>
+
+<h2 class="course-subtitle">
+📚 हमारे Courses
+</h2>
+
+<div class="course-line"></div>
+
+<p>
+🎓 कक्षा 6 से 12 तक गुणवत्तापूर्ण शिक्षा
+</p>
+
+</div>
+
+
+<div class="course-grid">
+
+
+<!-- CLASS 6-8 -->
+
+<div class="course-card">
+
+<div class="course-icon">
+📘
+</div>
+
+<h3>
+कक्षा 6 से 8
+</h3>
+
+<p>
+सभी विषय
+</p>
+
+<div class="subject-list">
+📖 हिन्दी<br>
+📐 Maths<br>
+🔬 Science<br>
+🇬🇧 English<br>
+🌍 Social Science
+</div>
+
+</div>
+
+
+<!-- CLASS 9-10 -->
+
+<div class="course-card">
+
+<div class="course-icon">
+📗
+</div>
+
+<h3>
+कक्षा 9 से 10
+</h3>
+
+<p>
+मुख्य विषय
+</p>
+
+<div class="subject-list">
+📐 Maths<br>
+🔬 Science<br>
+🇬🇧 English<br>
+🌍 Social Science
+</div>
+
+</div>
+
+
+<!-- CLASS 11-12 -->
+
+<div class="course-card">
+
+<div class="course-icon">
+📕
+</div>
+
+<h3>
+कक्षा 11 से 12
+</h3>
+
+<p>
+Science एवं Commerce
+</p>
+
+<div class="subject-list">
+🔬 Science Stream<br>
+💼 Commerce Stream<br>
+📐 Maths<br>
+🇬🇧 English
+</div>
+
+</div>
+
+</div>
+
+
+<div class="bottom-area">
+
+<a href="admission.html"
+class="course-button admission-button">
+📝 Admission Now
+</a>
+
+<a href="index.html"
+class="course-button">
+🏠 Home Page
+</a>
+
+</div>
+
+
+</body>
+</html>
