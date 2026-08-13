@@ -1,146 +1,182 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Admin Panel | MKG Coaching Classes</title>
 
-<link rel="stylesheet" href="Style.css">
-
 <style>
 
-.admin-title{
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    min-height:100vh;
+    background:linear-gradient(135deg,#eef5ff,#ffffff);
+    color:#123;
+}
+
+.admin-header{
+    background:linear-gradient(135deg,#032b55,#075da0);
+    color:white;
+    padding:25px 15px;
     text-align:center;
-    margin:35px 15px 10px;
+    box-shadow:0 8px 25px #0003;
 }
 
-.admin-subtitle{
-    text-align:center;
-    color:#777;
-    margin-bottom:25px;
-}
-
-.admin-grid{
-    max-width:1000px;
-    margin:20px auto;
-    padding:0 15px;
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
-    gap:18px;
-}
-
-.admin-card{
-    padding:22px;
-    border-radius:18px;
-    text-align:center;
-}
-
-.admin-card h3{
+.admin-header h1{
+    color:#ffd000;
     margin-bottom:8px;
 }
 
-.admin-card p{
-    margin-bottom:15px;
-    color:#777;
+.admin-header p{
+    opacity:.9;
 }
 
-.admin-card .btn{
-    display:inline-block;
-    text-decoration:none;
-}
-
-.logout-area{
-    text-align:center;
-    margin:30px 15px;
-}
-
-.home-area{
-    text-align:center;
-    margin:15px;
-}
-
-/* WEBSITE IMAGES */
-
-.image-manager{
-    max-width:1000px;
+.admin-grid{
+    max-width:1100px;
     margin:30px auto;
     padding:0 15px;
-}
-
-.image-manager-title{
-    text-align:center;
-    margin-bottom:20px;
-}
-
-.image-manager-title h2{
-    color:#06366b;
-}
-
-.image-manager-title p{
-    color:#777;
-}
-
-.image-grid{
     display:grid;
     grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
     gap:20px;
 }
 
-.image-card{
-    background:#fff;
+.card{
+    background:white;
     border-radius:20px;
-    padding:20px;
+    padding:25px;
     text-align:center;
-    box-shadow:0 8px 25px rgba(0,0,0,.12);
+    box-shadow:0 10px 30px #1232;
+    border:1px solid #e5edf8;
 }
 
-.image-card h3{
+.card h2,
+.card h3{
+    color:#063b70;
+    margin-bottom:12px;
+}
+
+.card p{
+    color:#667;
+    line-height:1.6;
     margin-bottom:15px;
-    color:#06366b;
 }
 
-.image-preview{
-    width:100%;
-    height:180px;
+.btn{
+    display:inline-block;
+    border:0;
+    padding:12px 20px;
+    border-radius:12px;
+    background:linear-gradient(135deg,#075da0,#06366b);
+    color:white;
+    text-decoration:none;
+    font-weight:bold;
+    cursor:pointer;
+    margin:5px;
+}
+
+.btn:hover{
+    transform:translateY(-2px);
+}
+
+.yellow{
+    background:linear-gradient(135deg,#ffe52b,#ffb900);
+    color:#062e58;
+}
+
+.green{
+    background:linear-gradient(135deg,#39e875,#08b94c);
+}
+
+.red{
+    background:linear-gradient(135deg,#ff5b5b,#d90000);
+}
+
+.photo-card{
+    grid-column:1/-1;
+    background:linear-gradient(135deg,#062e58,#075da0);
+    color:white;
+}
+
+.photo-card h2{
+    color:#ffd000;
+    font-size:28px;
+}
+
+.photo-card p{
+    color:white;
+}
+
+.photo-box{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+    gap:20px;
+    margin-top:20px;
+}
+
+.photo-item{
+    background:white;
+    color:#123;
+    border-radius:18px;
+    padding:20px;
+}
+
+.photo-preview{
+    width:150px;
+    height:150px;
     object-fit:cover;
-    border-radius:15px;
-    background:#eef3f8;
-    margin-bottom:15px;
-    border:2px solid #e4eaf0;
+    border-radius:18px;
+    display:block;
+    margin:0 auto 15px;
+    border:4px solid #ffd000;
+    background:#eee;
 }
 
 .file-input{
     width:100%;
+    margin:12px 0;
     padding:10px;
     border:1px solid #ddd;
     border-radius:10px;
-    margin-bottom:12px;
-}
-
-.upload-btn{
-    width:100%;
-    border:0;
-    cursor:pointer;
+    background:#f8f8f8;
 }
 
 .status{
-    margin-top:10px;
+    min-height:22px;
     font-size:14px;
-    min-height:20px;
+    font-weight:bold;
+    margin-top:8px;
 }
 
-.success{
-    color:green;
+.logout-area,
+.home-area{
+    text-align:center;
+    margin:25px 15px;
 }
 
-.error{
-    color:red;
+hr{
+    border:0;
+    border-top:1px solid #ddd;
+    margin:20px 0;
 }
 
-.loading{
-    opacity:.6;
-    pointer-events:none;
+@media(max-width:600px){
+
+    .admin-header h1{
+        font-size:25px;
+    }
+
+    .card{
+        padding:20px;
+    }
+
 }
 
 </style>
@@ -149,44 +185,46 @@
 
 <body>
 
-<h1 class="admin-title">
-🛠️ MKG Admin Panel
-</h1>
 
-<p class="admin-subtitle">
-Website का पूरा Management यहाँ से करें
-</p>
+<!-- HEADER -->
 
+<div class="admin-header">
 
-<!-- =========================
-     WEBSITE IMAGES
-========================= -->
+<h1>🛠️ MKG Admin Panel</h1>
 
-<div class="image-manager">
-
-<div class="image-manager-title">
-
-<h2>🖼️ Website Images</h2>
-
-<p>
-Logo, Hero और Director Photo यहाँ से बदलें
-</p>
+<p>Website का पूरा Management यहाँ से करें</p>
 
 </div>
 
 
-<div class="image-grid">
+<!-- ADMIN CARDS -->
+
+<div class="admin-grid">
+
+
+<!-- WEBSITE PHOTOS -->
+
+<div class="card photo-card">
+
+<h2>🖼️ Website Photos</h2>
+
+<p>
+यहाँ से Website का Logo, Hero और Director Photo बदलें।
+</p>
+
+
+<div class="photo-box">
 
 
 <!-- LOGO -->
 
-<div class="image-card">
+<div class="photo-item">
 
-<h3>🏷️ Website Logo</h3>
+<h3>🏫 Logo</h3>
 
 <img
 id="logoPreview"
-class="image-preview"
+class="photo-preview"
 src="Logo.png"
 alt="Logo">
 
@@ -197,10 +235,10 @@ class="file-input"
 accept="image/*">
 
 <button
-class="btn upload-btn"
-onclick="uploadWebsiteImage('logo')">
+class="btn yellow"
+onclick="uploadPhoto('logo')">
 
-📤 Logo Change करें
+⬆️ Logo Upload
 
 </button>
 
@@ -214,13 +252,13 @@ class="status">
 
 <!-- HERO -->
 
-<div class="image-card">
+<div class="photo-item">
 
 <h3>🖼️ Hero Photo</h3>
 
 <img
 id="heroPreview"
-class="image-preview"
+class="photo-preview"
 src="Hero.jpg"
 alt="Hero">
 
@@ -231,10 +269,10 @@ class="file-input"
 accept="image/*">
 
 <button
-class="btn upload-btn"
-onclick="uploadWebsiteImage('hero')">
+class="btn yellow"
+onclick="uploadPhoto('hero')">
 
-📤 Hero Photo Change करें
+⬆️ Hero Upload
 
 </button>
 
@@ -248,13 +286,13 @@ class="status">
 
 <!-- DIRECTOR -->
 
-<div class="image-card">
+<div class="photo-item">
 
 <h3>👨‍🏫 Director Photo</h3>
 
 <img
 id="directorPreview"
-class="image-preview"
+class="photo-preview"
 src="Director.png"
 alt="Director">
 
@@ -265,10 +303,10 @@ class="file-input"
 accept="image/*">
 
 <button
-class="btn upload-btn"
-onclick="uploadWebsiteImage('director')">
+class="btn yellow"
+onclick="uploadPhoto('director')">
 
-📤 Director Photo Change करें
+⬆️ Director Upload
 
 </button>
 
@@ -285,21 +323,14 @@ class="status">
 </div>
 
 
-<!-- =========================
-     ADMIN GRID
-========================= -->
-
-<div class="admin-grid">
-
-
 <!-- COURSES -->
 
-<div class="card admin-card">
+<div class="card">
 
 <h3>📚 Courses</h3>
 
 <p>
-Class 6th से 12th तक Courses Manage करें
+Class 6th से 12th तक Courses Manage करें।
 </p>
 
 <a href="course-update.html" class="btn">
@@ -311,12 +342,12 @@ Class 6th से 12th तक Courses Manage करें
 
 <!-- PDF -->
 
-<div class="card admin-card">
+<div class="card">
 
 <h3>📄 PDF Notes</h3>
 
 <p>
-PDF Notes Upload और Manage करें
+PDF Notes Upload और Manage करें।
 </p>
 
 <a href="pdf-upload.html" class="btn">
@@ -328,12 +359,12 @@ PDF Notes Upload और Manage करें
 
 <!-- VIDEO -->
 
-<div class="card admin-card">
+<div class="card">
 
 <h3>🎥 Video Classes</h3>
 
 <p>
-Online Classes के Video Manage करें
+Online Classes के Videos Manage करें।
 </p>
 
 <a href="video-update.html" class="btn">
@@ -345,12 +376,12 @@ Online Classes के Video Manage करें
 
 <!-- NOTICE -->
 
-<div class="card admin-card">
+<div class="card">
 
 <h3>📢 Notice</h3>
 
 <p>
-Website पर Notice Update करें
+Website पर Notice Update करें।
 </p>
 
 <a href="notice-update.html" class="btn">
@@ -362,12 +393,12 @@ Website पर Notice Update करें
 
 <!-- RESULTS -->
 
-<div class="card admin-card">
+<div class="card">
 
 <h3>🏆 Results</h3>
 
 <p>
-Students के Results Manage करें
+Students के Results Manage करें।
 </p>
 
 <a href="result-update.html" class="btn">
@@ -379,12 +410,12 @@ Students के Results Manage करें
 
 <!-- GALLERY -->
 
-<div class="card admin-card">
+<div class="card">
 
 <h3>📸 Gallery</h3>
 
 <p>
-Photos Upload और Manage करें
+Gallery Photos Upload और Manage करें।
 </p>
 
 <a href="gallery-upload.html" class="btn">
@@ -396,12 +427,12 @@ Photos Upload और Manage करें
 
 <!-- STUDENTS -->
 
-<div class="card admin-card">
+<div class="card">
 
 <h3>👨‍🎓 Students</h3>
 
 <p>
-Students की जानकारी Manage करें
+Students की जानकारी Manage करें।
 </p>
 
 <a href="student.html" class="btn">
@@ -413,12 +444,12 @@ Students की जानकारी Manage करें
 
 <!-- NOTES -->
 
-<div class="card admin-card">
+<div class="card">
 
 <h3>📝 Notes</h3>
 
 <p>
-Study Notes Manage करें
+Study Notes Manage करें।
 </p>
 
 <a href="notes.html" class="btn">
@@ -430,12 +461,12 @@ Study Notes Manage करें
 
 <!-- ADMISSION -->
 
-<div class="card admin-card">
+<div class="card">
 
 <h3>📝 Admission</h3>
 
 <p>
-Admission Form खोलें
+Admission Form खोलें।
 </p>
 
 <a href="admission.html" class="btn">
@@ -452,8 +483,12 @@ Admission Form खोलें
 
 <div class="logout-area">
 
-<button onclick="logout()" class="btn">
+<button
+onclick="logout()"
+class="btn red">
+
 🚪 Logout
+
 </button>
 
 </div>
@@ -463,20 +498,22 @@ Admission Form खोलें
 
 <div class="home-area">
 
-<a href="index.html" class="btn">
-🏠 Home
+<a
+href="index.html"
+class="btn green">
+
+🏠 Website Home
+
 </a>
 
 </div>
 
 
-<!-- =========================
-     FIREBASE + CLOUDINARY
-========================= -->
+<!-- CLOUDINARY + FIREBASE -->
 
 <script type="module">
 
-import { app, db } from "./firebase.js";
+import { db, app } from "./firebase.js";
 
 import {
     getAuth,
@@ -490,80 +527,62 @@ import {
 } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
 
 
-const auth = getAuth(app);
-
-
 /* =========================
    CLOUDINARY SETTINGS
 ========================= */
 
 const CLOUD_NAME = "pa5iwcv8";
 
-const UPLOAD_PRESET = "MKG gallery";
+const UPLOAD_PRESET = "mkg_images";
 
 
 /* =========================
-   UPLOAD IMAGE
+   AUTH
 ========================= */
 
-window.uploadWebsiteImage = async function(type){
-
-    let fileInput;
-    let preview;
-    let status;
-
-    if(type === "logo"){
-
-        fileInput = document.getElementById("logoFile");
-        preview = document.getElementById("logoPreview");
-        status = document.getElementById("logoStatus");
-
-    }
-
-    if(type === "hero"){
-
-        fileInput = document.getElementById("heroFile");
-        preview = document.getElementById("heroPreview");
-        status = document.getElementById("heroStatus");
-
-    }
-
-    if(type === "director"){
-
-        fileInput = document.getElementById("directorFile");
-        preview = document.getElementById("directorPreview");
-        status = document.getElementById("directorStatus");
-
-    }
+const auth = getAuth(app);
 
 
-    const file = fileInput.files[0];
+/* =========================
+   UPLOAD PHOTO
+========================= */
+
+window.uploadPhoto = async function(type){
+
+    const fileInput =
+        document.getElementById(type + "File");
+
+    const status =
+        document.getElementById(type + "Status");
+
+    const preview =
+        document.getElementById(type + "Preview");
 
 
-    if(!file){
+    if(!fileInput.files.length){
 
-        status.className = "status error";
+        status.style.color="red";
 
-        status.textContent =
-        "❌ पहले Photo चुनें।";
+        status.textContent=
+        "❌ पहले फोटो चुनें।";
 
         return;
 
     }
 
 
-    status.className = "status";
+    const file=fileInput.files[0];
 
-    status.textContent =
-    "⏳ Photo Upload हो रही है...";
+
+    status.style.color="#075da0";
+
+    status.textContent=
+    "⏳ Upload हो रहा है...";
 
 
     try{
 
-
-        /* CLOUDINARY */
-
-        const formData = new FormData();
+        const formData=new FormData();
 
         formData.append("file",file);
 
@@ -573,24 +592,19 @@ window.uploadWebsiteImage = async function(type){
         );
 
 
-        formData.append(
-            "folder",
-            "MKG"
-        );
+        const response=await fetch(
 
-
-        const response =
-        await fetch(
             `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
+
             {
                 method:"POST",
                 body:formData
             }
+
         );
 
 
-        const data =
-        await response.json();
+        const data=await response.json();
 
 
         if(!response.ok){
@@ -603,61 +617,44 @@ window.uploadWebsiteImage = async function(type){
         }
 
 
-        const imageUrl =
-        data.secure_url;
+        const imageUrl=data.secure_url;
 
 
-        /* FIREBASE */
+        /* Preview */
+
+        preview.src=imageUrl;
+
+
+        /* Save URL in Firebase */
 
         await setDoc(
 
-            doc(
-                db,
-                "websiteImages",
-                type
-            ),
+            doc(db,"websiteSettings","photos"),
 
             {
-                imageUrl:imageUrl,
-                publicId:data.public_id,
+                [type]:imageUrl,
                 updatedAt:new Date()
             },
 
-            {
-                merge:true
-            }
+            {merge:true}
 
         );
 
 
-        /* PREVIEW */
+        status.style.color="green";
 
-        preview.src =
-        imageUrl +
-        "?v=" +
-        Date.now();
-
-
-        fileInput.value = "";
-
-
-        status.className =
-        "status success";
-
-        status.textContent =
-        "✅ Photo Successfully Change हो गई";
+        status.textContent=
+        "✅ Photo Successfully Updated";
 
 
     }catch(error){
 
         console.error(error);
 
+        status.style.color="red";
 
-        status.className =
-        "status error";
-
-        status.textContent =
-        "❌ " + error.message;
+        status.textContent=
+        "❌ Error: "+error.message;
 
     }
 
@@ -665,82 +662,40 @@ window.uploadWebsiteImage = async function(type){
 
 
 /* =========================
-   LOAD SAVED IMAGES
+   LOAD SAVED PHOTOS
 ========================= */
 
-async function loadWebsiteImages(){
+async function loadPhotos(){
 
     try{
 
-        const types = [
-            "logo",
-            "hero",
-            "director"
-        ];
+        const snap=await getDoc(
+            doc(db,"websiteSettings","photos")
+        );
 
 
-        for(const type of types){
-
-            const imageDoc =
-            await getDoc(
-                doc(
-                    db,
-                    "websiteImages",
-                    type
-                )
-            );
+        if(!snap.exists()) return;
 
 
-            if(
-                imageDoc.exists()
-            ){
-
-                const data =
-                imageDoc.data();
+        const data=snap.data();
 
 
-                if(data.imageUrl){
-
-                    if(type === "logo"){
-
-                        document.getElementById(
-                            "logoPreview"
-                        ).src =
-                        data.imageUrl;
-
-                    }
+        if(data.logo)
+            document.getElementById("logoPreview").src=data.logo;
 
 
-                    if(type === "hero"){
-
-                        document.getElementById(
-                            "heroPreview"
-                        ).src =
-                        data.imageUrl;
-
-                    }
+        if(data.hero)
+            document.getElementById("heroPreview").src=data.hero;
 
 
-                    if(type === "director"){
-
-                        document.getElementById(
-                            "directorPreview"
-                        ).src =
-                        data.imageUrl;
-
-                    }
-
-                }
-
-            }
-
-        }
+        if(data.director)
+            document.getElementById("directorPreview").src=data.director;
 
 
     }catch(error){
 
         console.error(
-            "Image Load Error:",
+            "Photo Load Error:",
             error
         );
 
@@ -749,43 +704,38 @@ async function loadWebsiteImages(){
 }
 
 
-loadWebsiteImages();
+loadPhotos();
 
 
 /* =========================
    LOGOUT
 ========================= */
 
-function logout(){
+window.logout=function(){
 
     signOut(auth)
-
     .then(()=>{
 
-        alert(
-            "Logout Successful"
-        );
+        alert("Logout Successful");
 
-        window.location.href =
+        window.location.href=
         "admin-login.html";
 
     })
-
-    .catch((error)=>{
+    .catch(error=>{
 
         alert(
-            "Logout Error: " +
+            "Logout Error: "+
             error.message
         );
 
     });
 
-}
-
-
-window.logout = logout;
+};
 
 </script>
 
+
 </body>
+
 </html>
