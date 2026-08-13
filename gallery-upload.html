@@ -70,172 +70,244 @@ Loading...
 
 <script type="module">
 
-import { app, db, storage } from "./firebase.js";
+import { db } from "./firebase.js";
 
 import {
-
-getStorage,
-ref,
-uploadBytes,
-getDownloadURL,
-deleteObject
-
-} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-storage.js";
-
-import {
-
-collection,
-addDoc,
-getDocs,
-deleteDoc,
-doc
-
+  collection,
+  addDoc,
+  getDocs,
+  deleteDoc,
+  doc
 } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
 
 
 const uploadBtn = document.getElementById("uploadPhoto");
 
+
 uploadBtn.addEventListener("click", async () => {
-alert("Button Working");
-const file = document.getElementById("photoFile").files[0];
-const title = document.getElementById("photoTitle").value.trim();
-alert(file ? file.name : "No File");
-alert(title);
-if(!file){
-alert("पहले Photo चुनें।");
-return;
-}
 
-if(!title){
-alert("Photo Title लिखें।");
-return;
-}
+  const file =
+    document.getElementById("photoFile").files[0];
 
-try{
+  const title =
+    document.getElementById("photoTitle").value.trim();
 
-const imageRef = ref(storage,"gallery/"+Date.now()+"_"+file.name);
 
-alert("Uploading Start");
+  if (!file) {
+    alert("पहले Photo चुनें।");
+    return;
+  }
 
-await uploadBytes(imageRef,file);
 
-alert("Upload Complete");
+  if (!title) {
+    alert("Photo Title लिखें।");
+    return;
+  }
 
-const imageUrl = await getDownloadURL(imageRef);
 
-alert("Saving Data");
-await addDoc(collection(db,"gallery"),{
+  try {
 
-title:title,
+    const formData = new FormData();
 
-imageUrl:imageUrl,
+    formData.append("file", file);
 
-imagePath:imageRef.fullPath
+    formData.append(
+      "upload_preset",
+      "MKG gallery"
+    );
 
-});
 
-alert("✅ Photo Upload हो गया!");
+    alert("📤 Photo Upload हो रहा है...");
 
-document.getElementById("photoFile").value="";
-document.getElementById("photoTitle").value="";
 
-loadPhotos();
+    const response = await fetch(
+      "https://api.cloudinary.com/v1_1/pa5iwcv8/image/upload",
+      {
+        method: "POST",
+        body: formData
+      }
+    );
 
-}catch(error){
 
-console.error(error);
+    const data = await response.json();
 
-alert(error.message);
 
-}
+    if (!response.ok) {
 
-});
+      throw new Error(
+        data.error?.message ||
+        "Cloudinary Upload Failed"
+      );
 
-async function loadPhotos(){
+    }
 
-const photoList=document.getElementById("photoList");
 
-photoList.innerHTML="";
-try{
+    const imageUrl = data.secure_url;
 
-const snapshot = await getDocs(collection(db,"gallery"));
 
-if(snapshot.empty){
+    await addDoc(
+      collection(db, "gallery"),
+      {
+        title: title,
+        imageUrl: imageUrl,
+        publicId: data.public_id
+      }
+    );
 
-photoList.innerHTML="<p>अभी कोई Photo नहीं है।</p>";
 
-return;
+    alert("✅ Photo Upload हो गया!");
 
-}
 
-snapshot.forEach((photoDoc)=>{
+    document.getElementById("photoFile").value = "";
 
-const data=photoDoc.data();
+    document.getElementById("photoTitle").value = "";
 
-const box=document.createElement("div");
 
-box.className="card";
+    loadPhotos();
 
-box.style.marginBottom="15px";
 
-box.innerHTML=`
-<img src="${data.imageUrl}"
-style="width:100%;max-height:220px;object-fit:cover;border-radius:10px;">
+  } catch (error) {
 
-<h3>${data.title}</h3>
-`;
+    console.error(error);
 
-const deleteBtn=document.createElement("button");
+    alert("❌ " + error.message);
 
-deleteBtn.className="btn";
-
-deleteBtn.style.background="#dc3545";
-
-deleteBtn.textContent="🗑 Delete";
-
-deleteBtn.onclick=async()=>{
-
-if(confirm("क्या यह Photo Delete करना चाहते हैं?")){
-
-try{
-
-const imageRef=ref(storage,data.imagePath);
-
-await deleteObject(imageRef);
-
-await deleteDoc(doc(db,"gallery",photoDoc.id));
-
-alert("✅ Photo Delete हो गया");
-
-loadPhotos();
-
-}catch(error){
-
-console.error(error);
-
-alert("❌ Delete Failed");
-
-}
-
-}
-
-};
-
-box.appendChild(deleteBtn);
-
-photoList.appendChild(box);
+  }
 
 });
 
-}catch(error){
 
-console.error(error);
 
-photoList.innerHTML="<p>❌ Gallery Load नहीं हुई।</p>";
+async function loadPhotos() {
+
+  const photoList =
+    document.getElementById("photoList");
+
+
+  photoList.innerHTML = "Loading...";
+
+
+  try {
+
+    const snapshot =
+      await getDocs(collection(db, "gallery"));
+
+
+    if (snapshot.empty) {
+
+      photoList.innerHTML =
+        "<p>अभी कोई Photo नहीं है।</p>";
+
+      return;
+
+    }
+
+
+    photoList.innerHTML = "";
+
+
+    snapshot.forEach((photoDoc) => {
+
+      const data = photoDoc.data();
+
+
+      const box =
+        document.createElement("div");
+
+
+      box.className = "card";
+
+      box.style.marginBottom = "15px";
+
+
+      box.innerHTML = `
+
+        <img
+          src="${data.imageUrl}"
+          style="
+            width:100%;
+            max-height:220px;
+            object-fit:cover;
+            border-radius:10px;
+          "
+        >
+
+        <h3>${data.title}</h3>
+
+      `;
+
+
+      const deleteBtn =
+        document.createElement("button");
+
+
+      deleteBtn.className = "btn";
+
+      deleteBtn.style.background = "#dc3545";
+
+      deleteBtn.textContent = "🗑 Delete";
+
+
+      deleteBtn.onclick = async () => {
+
+        if (
+          confirm(
+            "क्या यह Photo Gallery से Delete करना चाहते हैं?"
+          )
+        ) {
+
+          try {
+
+            await deleteDoc(
+              doc(
+                db,
+                "gallery",
+                photoDoc.id
+              )
+            );
+
+
+            alert(
+              "✅ Photo Gallery से Delete हो गया"
+            );
+
+
+            loadPhotos();
+
+
+          } catch (error) {
+
+            console.error(error);
+
+            alert(
+              "❌ Delete Failed"
+            );
+
+          }
+
+        }
+
+      };
+
+
+      box.appendChild(deleteBtn);
+
+      photoList.appendChild(box);
+
+    });
+
+
+  } catch (error) {
+
+    console.error(error);
+
+    photoList.innerHTML =
+      "<p>❌ Gallery Load नहीं हुई।</p>";
+
+  }
 
 }
 
-}
 
 loadPhotos();
 
