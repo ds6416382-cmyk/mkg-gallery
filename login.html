@@ -1,49 +1,595 @@
 <!DOCTYPE html>
 <html lang="hi">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
 <title>Student Login | MKG Coaching Classes</title>
 
-<link rel="stylesheet" href="Style.css">
+<style>
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    padding:20px;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:linear-gradient(135deg,#eef5ff,#ffffff);
+    font-family:Arial,sans-serif;
+    color:#123;
+}
+
+.login-box{
+    width:100%;
+    max-width:480px;
+    background:white;
+    padding:30px;
+    border-radius:25px;
+    box-shadow:0 12px 40px rgba(0,0,0,.15);
+}
+
+.logo{
+    text-align:center;
+    font-size:55px;
+    margin-bottom:5px;
+}
+
+h1{
+    text-align:center;
+    color:#062e58;
+    margin:5px 0 8px;
+}
+
+.subtitle{
+    text-align:center;
+    color:#667;
+    line-height:1.6;
+    margin-bottom:25px;
+}
+
+label{
+    display:block;
+    margin-top:17px;
+    margin-bottom:7px;
+    font-weight:bold;
+    color:#17395f;
+}
+
+input{
+    width:100%;
+    padding:14px;
+    border:1px solid #ccd6e5;
+    border-radius:12px;
+    font-size:16px;
+    outline:none;
+}
+
+input:focus{
+    border-color:#075da0;
+    box-shadow:0 0 0 3px rgba(7,93,160,.1);
+}
+
+.login-btn{
+    width:100%;
+    margin-top:25px;
+    padding:15px;
+    border:0;
+    border-radius:14px;
+    background:linear-gradient(135deg,#ffd000,#ffad00);
+    color:#062e58;
+    font-size:18px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.login-btn:disabled{
+    opacity:.6;
+    cursor:not-allowed;
+}
+
+.status{
+    text-align:center;
+    margin-top:18px;
+    line-height:1.7;
+    font-weight:bold;
+}
+
+.success{
+    color:#08752c;
+}
+
+.error{
+    color:#c62828;
+}
+
+.info{
+    margin-top:20px;
+    padding:14px;
+    background:#fff8d8;
+    border-left:5px solid #ffd000;
+    border-radius:10px;
+    color:#654f00;
+    line-height:1.6;
+    font-size:14px;
+}
+
+.links{
+    text-align:center;
+    margin-top:22px;
+}
+
+.links a{
+    display:block;
+    margin:12px 0;
+    color:#0755c9;
+    font-weight:bold;
+    text-decoration:none;
+}
+
+</style>
+
 </head>
+
 
 <body>
 
-<h1 style="text-align:center;margin-top:40px;">
-🎓 Student Login
+
+<div class="login-box">
+
+
+<div class="logo">
+🎓
+</div>
+
+
+<h1>
+Student Login
 </h1>
 
-<div style="max-width:400px;margin:40px auto;padding:30px;background:#fff;border-radius:20px;box-shadow:0 5px 20px rgba(0,0,0,.2);">
 
-<input type="text" id="username" placeholder="Student ID"
-style="width:100%;padding:15px;margin-bottom:15px;">
+<p class="subtitle">
 
-<input type="password" id="password" placeholder="Password"
-style="width:100%;padding:15px;margin-bottom:20px;">
+MKG Coaching Classes
 
-<button onclick="login()"
-style="width:100%;padding:15px;background:#0a2a66;color:white;border:none;border-radius:10px;font-size:18px;">
-Login
+<br>
+
+Approved Students के लिए Student Portal
+
+</p>
+
+
+<label>
+🆔 Student ID
+</label>
+
+<input
+type="text"
+id="studentId"
+placeholder="जैसे MKG1234"
+autocomplete="username">
+
+
+<label>
+🔐 Password
+</label>
+
+<input
+type="password"
+id="password"
+placeholder="अपना Password डालें"
+autocomplete="current-password">
+
+
+<button
+class="login-btn"
+id="loginBtn">
+
+🔐 Login
+
 </button>
+
+
+<div
+id="status"
+class="status">
+</div>
+
+
+<div class="info">
+
+ℹ️ केवल <strong>Approved Students</strong> ही Login कर सकते हैं।
+
+<br>
+
+Student ID आपको Admin Approval के बाद मिली होगी।
 
 </div>
 
-<script>
-function login(){
 
-let user=document.getElementById("username").value;
-let pass=document.getElementById("password").value;
+<div class="links">
 
-if(user=="student" && pass=="1234"){
-window.location.href="dashboard.html";
-}
-else{
-alert("Wrong Student ID or Password");
-}
+<a href="student-registration.html">
+📝 New Student? Registration करें
+</a>
+
+
+<a href="index.html">
+🏠 Website Home
+</a>
+
+</div>
+
+
+</div>
+
+
+
+<script type="module">
+
+
+import { db }
+from "./firebase.js";
+
+
+import {
+
+collection,
+query,
+where,
+getDocs
 
 }
+from
+"https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+
+
+const loginBtn =
+document.getElementById("loginBtn");
+
+
+const status =
+document.getElementById("status");
+
+
+
+/* =========================
+   PASSWORD HASH
+========================= */
+
+async function hashPassword(password){
+
+    const encoder =
+    new TextEncoder();
+
+
+    const data =
+    encoder.encode(password);
+
+
+    const hashBuffer =
+    await crypto.subtle.digest(
+        "SHA-256",
+        data
+    );
+
+
+    const hashArray =
+    Array.from(
+        new Uint8Array(hashBuffer)
+    );
+
+
+    return hashArray
+    .map(
+        byte =>
+        byte
+        .toString(16)
+        .padStart(2,"0")
+    )
+    .join("");
+
+}
+
+
+
+/* =========================
+   STUDENT LOGIN
+========================= */
+
+loginBtn.addEventListener(
+"click",
+async function(){
+
+
+    const studentId =
+    document
+    .getElementById("studentId")
+    .value
+    .trim()
+    .toUpperCase();
+
+
+    const password =
+    document
+    .getElementById("password")
+    .value;
+
+
+    status.className =
+    "status";
+
+
+    if(!studentId){
+
+        status.className =
+        "status error";
+
+        status.innerText =
+        "❌ Student ID डालें।";
+
+        return;
+
+    }
+
+
+    if(!password){
+
+        status.className =
+        "status error";
+
+        status.innerText =
+        "❌ Password डालें।";
+
+        return;
+
+    }
+
+
+    loginBtn.disabled =
+    true;
+
+
+    loginBtn.innerText =
+    "⏳ Login हो रहा है...";
+
+
+    status.innerText =
+    "कृपया थोड़ा इंतजार करें...";
+
+
+    try{
+
+
+        /* =========================
+           FIND STUDENT
+        ========================= */
+
+        const studentQuery =
+        query(
+
+            collection(
+                db,
+                "studentRegistrations"
+            ),
+
+            where(
+                "studentId",
+                "==",
+                studentId
+            )
+
+        );
+
+
+        const snapshot =
+        await getDocs(
+            studentQuery
+        );
+
+
+        if(snapshot.empty){
+
+            throw new Error(
+                "Student ID गलत है।"
+            );
+
+        }
+
+
+        const studentDoc =
+        snapshot.docs[0];
+
+
+        const student =
+        studentDoc.data();
+
+
+
+        /* =========================
+           APPROVAL CHECK
+        ========================= */
+
+        if(student.status !== "approved"){
+
+            if(student.status === "pending"){
+
+                throw new Error(
+                    "आपका Registration अभी Pending है। Admin Approval का इंतजार करें।"
+                );
+
+            }
+
+
+            if(student.status === "rejected"){
+
+                throw new Error(
+                    "आपका Registration Reject किया गया है।"
+                );
+
+            }
+
+
+            throw new Error(
+                "Student Account Approved नहीं है।"
+            );
+
+        }
+
+
+
+        /* =========================
+           PASSWORD CHECK
+        ========================= */
+
+        const passwordHash =
+        await hashPassword(
+            password
+        );
+
+
+        if(
+            passwordHash !==
+            student.passwordHash
+        ){
+
+            throw new Error(
+                "Password गलत है।"
+            );
+
+        }
+
+
+
+        /* =========================
+           SAVE LOGIN SESSION
+        ========================= */
+
+        const studentSession = {
+
+            documentId:
+            studentDoc.id,
+
+            studentId:
+            student.studentId,
+
+            studentName:
+            student.studentName,
+
+            mobile:
+            student.mobile,
+
+            whatsapp:
+            student.whatsapp,
+
+            studentClass:
+            student.studentClass,
+
+            photoURL:
+            student.photoURL,
+
+            loginTime:
+            Date.now()
+
+        };
+
+
+        localStorage.setItem(
+
+            "mkgStudentSession",
+
+            JSON.stringify(
+                studentSession
+            )
+
+        );
+
+
+
+        /* =========================
+           SUCCESS
+        ========================= */
+
+        status.className =
+        "status success";
+
+
+        status.innerHTML = `
+
+        🎉 Login Successful!
+
+        <br>
+
+        स्वागत है
+        <strong>
+        ${student.studentName || "Student"}
+        </strong>
+
+        <br>
+
+        ⏳ Student Portal खोला जा रहा है...
+
+        `;
+
+
+        setTimeout(
+        function(){
+
+            window.location.href =
+            "student.html";
+
+        },
+        800
+        );
+
+
+    }
+
+
+    catch(error){
+
+        console.error(
+            "Student Login Error:",
+            error
+        );
+
+
+        status.className =
+        "status error";
+
+
+        status.innerText =
+        "❌ " +
+        error.message;
+
+    }
+
+
+    finally{
+
+        loginBtn.disabled =
+        false;
+
+
+        loginBtn.innerText =
+        "🔐 Login";
+
+    }
+
+});
+
+
 </script>
 
+
 </body>
+
 </html>

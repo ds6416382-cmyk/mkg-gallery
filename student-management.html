@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="hi">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Student Management | MKG Coaching Classes</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    background:#f4f8ff;
+    color:#123;
+}
+
+.header{
+    background:linear-gradient(135deg,#032b55,#075da0);
+    color:white;
+    padding:25px 15px;
+    text-align:center;
+}
+
+.header h1{
+    color:#ffd000;
+    margin-bottom:8px;
+}
+
+.container{
+    max-width:1200px;
+    margin:30px auto;
+    padding:0 15px;
+}
+
+.top-bar{
+    background:white;
+    padding:20px;
+    border-radius:18px;
+    box-shadow:0 8px 25px #1232;
+    margin-bottom:25px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:15px;
+    flex-wrap:wrap;
+}
+
+.top-bar h2{
+    color:#063b70;
+}
+
+.count{
+    background:#fff3b0;
+    color:#654f00;
+    padding:10px 16px;
+    border-radius:10px;
+    font-weight:bold;
+}
+
+.student-grid{
+    display:grid;
+    grid-template-columns:
+    repeat(auto-fit,minmax(300px,1fr));
+    gap:20px;
+}
+
+.student-card{
+    background:white;
+    border-radius:20px;
+    padding:20px;
+    box-shadow:0 10px 30px #1232;
+    border:1px solid #e5edf8;
+}
+
+.student-photo{
+    width:180px;
+    height:220px;
+    object-fit:cover;
+    display:block;
+    margin:0 auto 18px;
+    border-radius:15px;
+    border:4px solid #ffd000;
+    background:#eee;
+}
+
+.student-card h3{
+    color:#063b70;
+    text-align:center;
+    margin-bottom:15px;
+    font-size:21px;
+}
+
+.info{
+    line-height:1.9;
+    color:#456;
+    margin-bottom:15px;
+}
+
+.status{
+    text-align:center;
+    padding:9px;
+    border-radius:10px;
+    font-weight:bold;
+    margin-bottom:15px;
+}
+
+.pending{
+    background:#fff3b0;
+    color:#765b00;
+}
+
+.approved{
+    background:#d9ffe6;
+    color:#08752d;
+}
+
+.rejected{
+    background:#ffe0e0;
+    color:#b00000;
+}
+
+.btn{
+    border:0;
+    padding:11px 16px;
+    border-radius:10px;
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+    margin:4px;
+}
+
+.approve{
+    background:#08b94c;
+}
+
+.reject{
+    background:#d90000;
+}
+
+.delete{
+    background:#555;
+}
+
+.btn:disabled{
+    opacity:.5;
+    cursor:not-allowed;
+}
+
+.actions{
+    text-align:center;
+}
+
+.empty{
+    background:white;
+    padding:40px 20px;
+    text-align:center;
+    border-radius:20px;
+    box-shadow:0 8px 25px #1232;
+}
+
+.loading{
+    text-align:center;
+    padding:40px;
+    font-size:18px;
+    font-weight:bold;
+}
+
+.back{
+    display:inline-block;
+    margin-top:25px;
+    padding:12px 20px;
+    background:#06366b;
+    color:white;
+    text-decoration:none;
+    border-radius:10px;
+    font-weight:bold;
+}
+
+@media(max-width:600px){
+
+    .student-photo{
+        width:150px;
+        height:190px;
+    }
+
+    .top-bar{
+        flex-direction:column;
+        text-align:center;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- HEADER -->
+
+<div class="header">
+
+<h1>
+👨‍🎓 Student Management
+</h1>
+
+<p>
+MKG Coaching Classes — Student Registration
+</p>
+
+</div>
+
+
+<div class="container">
+
+
+<!-- TOP -->
+
+<div class="top-bar">
+
+<h2>
+📋 Student Registrations
+</h2>
+
+<div class="count">
+
+Total:
+<span id="totalCount">0</span>
+
+</div>
+
+</div>
+
+
+<!-- STUDENTS -->
+
+<div
+id="studentList"
+class="student-grid">
+
+<div class="loading">
+
+⏳ Registrations Loading...
+
+</div>
+
+</div>
+
+
+<div style="text-align:center;">
+
+<a
+href="admin.html"
+class="back">
+
+⬅️ Back to Admin Panel
+
+</a>
+
+</div>
+
+
+</div>
+
+
+
+<script type="module">
+
+
+import { db, app }
+from "./firebase.js";
+
+
+import {
+
+collection,
+getDocs,
+doc,
+updateDoc,
+deleteDoc,
+query,
+orderBy
+
+}
+from
+"https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+
+
+/* =========================
+   ELEMENTS
+========================= */
+
+const studentList =
+document.getElementById(
+    "studentList"
+);
+
+const totalCount =
+document.getElementById(
+    "totalCount"
+);
+
+
+/* =========================
+   LOAD STUDENTS
+========================= */
+
+async function loadStudents(){
+
+    studentList.innerHTML = `
+
+    <div class="loading">
+
+    ⏳ Students Loading...
+
+    </div>
+
+    `;
+
+
+    try{
+
+
+        const q =
+        query(
+
+            collection(
+                db,
+                "studentRegistrations"
+            ),
+
+            orderBy(
+                "createdAt",
+                "desc"
+            )
+
+        );
+
+
+        const snapshot =
+        await getDocs(q);
+
+
+        totalCount.textContent =
+        snapshot.size;
+
+
+        if(snapshot.empty){
+
+            studentList.innerHTML = `
+
+            <div class="empty">
+
+            <h2>
+            👨‍🎓 अभी कोई Registration नहीं है
+            </h2>
+
+            <p style="margin-top:10px;color:#667;">
+
+            जब कोई Student Registration करेगा,
+            यहाँ दिखाई देगा।
+
+            </p>
+
+            </div>
+
+            `;
+
+            return;
+
+        }
+
+
+        studentList.innerHTML="";
+
+
+        snapshot.forEach(
+        function(studentDoc){
+
+            const data =
+            studentDoc.data();
+
+
+            const id =
+            studentDoc.id;
+
+
+            let statusClass =
+            "pending";
+
+
+            if(data.status==="approved"){
+
+                statusClass =
+                "approved";
+
+            }
+
+
+            if(data.status==="rejected"){
+
+                statusClass =
+                "rejected";
+
+            }
+
+
+            const card =
+            document.createElement(
+                "div"
+            );
+
+
+            card.className =
+            "student-card";
+
+
+            card.innerHTML = `
+
+            <img
+
+            class="student-photo"
+
+            src="${
+                data.photoURL ||
+                "Logo.png"
+            }"
+
+            alt="Student Photo"
+
+            onerror="this.src='Logo.png'">
+
+
+            <h3>
+
+            👤 ${
+                data.studentName ||
+                "Student"
+            }
+
+            </h3>
+
+
+            <div class="status ${statusClass}">
+
+            ${
+                data.status==="approved"
+                ? "🟢 APPROVED"
+                : data.status==="rejected"
+                ? "🔴 REJECTED"
+                : "🟡 PENDING"
+            }
+
+            </div>
+
+
+            <div class="info">
+
+            📱 <strong>Mobile:</strong>
+            ${
+                data.mobile || "-"
+            }
+
+            <br>
+
+            💬 <strong>WhatsApp:</strong>
+            ${
+                data.whatsapp || "-"
+            }
+
+            <br>
+
+            🎓 <strong>Class:</strong>
+            ${
+                data.studentClass || "-"
+            }
+
+            ${
+                data.studentId
+                ?
+                `<br>
+                🆔 <strong>Student ID:</strong>
+                ${data.studentId}`
+                :
+                ""
+            }
+
+            </div>
+
+
+            <div class="actions">
+
+
+            ${
+                data.status!=="approved"
+
+                ?
+
+                `<button
+                class="btn approve"
+                onclick="approveStudent('${id}')">
+
+                ✅ Approve
+
+                </button>`
+
+                :
+
+                ""
+
+            }
+
+
+            ${
+                data.status!=="rejected"
+
+                ?
+
+                `<button
+                class="btn reject"
+                onclick="rejectStudent('${id}')">
+
+                ❌ Reject
+
+                </button>`
+
+                :
+
+                ""
+
+            }
+
+
+            <button
+            class="btn delete"
+            onclick="deleteStudent('${id}')">
+
+            🗑️ Delete
+
+            </button>
+
+
+            </div>
+
+            `;
+
+
+            studentList.appendChild(
+                card
+            );
+
+        });
+
+
+    }catch(error){
+
+        console.error(error);
+
+
+        studentList.innerHTML = `
+
+        <div class="empty">
+
+        ❌ Students Load नहीं हो पाए।
+
+        <br><br>
+
+        ${error.message}
+
+        </div>
+
+        `;
+
+    }
+
+}
+
+
+/* =========================
+   APPROVE STUDENT
+========================= */
+
+window.approveStudent =
+async function(id){
+
+    const studentId =
+    prompt(
+        "Student ID डालें:",
+        "MKG" +
+        Math.floor(
+            10000 +
+            Math.random()*90000
+        )
+    );
+
+
+    if(!studentId){
+
+        return;
+
+    }
+
+
+    try{
+
+
+        await updateDoc(
+
+            doc(
+                db,
+                "studentRegistrations",
+                id
+            ),
+
+            {
+
+                status:
+                "approved",
+
+                studentId:
+                studentId.trim(),
+
+                approvedAt:
+                new Date()
+
+            }
+
+        );
+
+
+        alert(
+            "✅ Student Successfully Approved"
+        );
+
+
+        loadStudents();
+
+
+    }catch(error){
+
+        console.error(error);
+
+        alert(
+            "❌ Approval Error: "+
+            error.message
+        );
+
+    }
+
+};
+
+
+/* =========================
+   REJECT STUDENT
+========================= */
+
+window.rejectStudent =
+async function(id){
+
+    const confirmReject =
+    confirm(
+        "क्या आप इस Student Registration को Reject करना चाहते हैं?"
+    );
+
+
+    if(!confirmReject){
+
+        return;
+
+    }
+
+
+    try{
+
+
+        await updateDoc(
+
+            doc(
+                db,
+                "studentRegistrations",
+                id
+            ),
+
+            {
+
+                status:
+                "rejected",
+
+                rejectedAt:
+                new Date()
+
+            }
+
+        );
+
+
+        alert(
+            "🔴 Registration Rejected"
+        );
+
+
+        loadStudents();
+
+
+    }catch(error){
+
+        console.error(error);
+
+        alert(
+            "❌ Reject Error: "+
+            error.message
+        );
+
+    }
+
+};
+
+
+/* =========================
+   DELETE STUDENT
+========================= */
+
+window.deleteStudent =
+async function(id){
+
+    const confirmDelete =
+    confirm(
+        "⚠️ क्या आप इस Registration को पूरी तरह Delete करना चाहते हैं?"
+    );
+
+
+    if(!confirmDelete){
+
+        return;
+
+    }
+
+
+    try{
+
+
+        await deleteDoc(
+
+            doc(
+                db,
+                "studentRegistrations",
+                id
+            )
+
+        );
+
+
+        alert(
+            "🗑️ Registration Deleted"
+        );
+
+
+        loadStudents();
+
+
+    }catch(error){
+
+        console.error(error);
+
+        alert(
+            "❌ Delete Error: "+
+            error.message
+        );
+
+    }
+
+};
+
+
+/* =========================
+   START
+========================= */
+
+loadStudents();
+
+
+</script>
+
+
+</body>
+
+</html>

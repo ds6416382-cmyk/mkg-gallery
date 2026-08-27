@@ -1,68 +1,574 @@
 <!DOCTYPE html>
 <html lang="hi">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Notes | MKG Coaching Classes</title>
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>PDF Notes | MKG Coaching Classes</title>
 
 <link rel="stylesheet" href="Style.css">
+
+<style>
+
+body{
+    font-family:Poppins,sans-serif;
+    background:#f5f7fb;
+    margin:0;
+    padding:20px;
+}
+
+h1{
+    text-align:center;
+    color:#0b3d91;
+    margin:25px 0 10px;
+}
+
+.subtitle{
+    text-align:center;
+    color:#666;
+    margin-bottom:25px;
+}
+
+.notes-list{
+    max-width:1000px;
+    margin:auto;
+}
+
+.note-card{
+
+    background:white;
+
+    padding:20px;
+
+    margin:18px 0;
+
+    border-radius:15px;
+
+    box-shadow:
+    0 5px 15px rgba(0,0,0,.12);
+}
+
+.note-card h2{
+
+    color:#0b3d91;
+
+    margin:0 0 8px;
+
+}
+
+.subject{
+
+    color:#555;
+
+    font-weight:bold;
+
+    margin-bottom:8px;
+
+}
+
+.file-name{
+
+    color:#777;
+
+    font-size:13px;
+
+    word-break:break-all;
+
+}
+
+.open-btn{
+
+    display:inline-block;
+
+    margin-top:15px;
+
+    padding:11px 18px;
+
+    background:#198754;
+
+    color:white;
+
+    text-decoration:none;
+
+    border-radius:8px;
+
+    font-weight:bold;
+
+}
+
+.loading{
+
+    text-align:center;
+
+    padding:40px;
+
+    color:#0b3d91;
+
+    font-size:18px;
+
+}
+
+.no-notes{
+
+    background:white;
+
+    padding:35px 20px;
+
+    border-radius:15px;
+
+    text-align:center;
+
+    box-shadow:
+    0 5px 15px rgba(0,0,0,.12);
+
+}
+
+.class-title{
+
+    margin-top:30px;
+
+    color:#0b3d91;
+
+    border-bottom:2px solid #ddd;
+
+    padding-bottom:8px;
+
+}
+
+.home{
+
+    display:block;
+
+    width:max-content;
+
+    margin:30px auto;
+
+    padding:12px 20px;
+
+    background:#0b3d91;
+
+    color:white;
+
+    text-decoration:none;
+
+    border-radius:8px;
+
+    font-weight:bold;
+
+}
+
+</style>
+
 </head>
+
 
 <body>
 
-<h1 style="text-align:center;margin-top:30px;">
+
+<h1>
 📚 PDF Notes
 </h1>
 
-<div class="card" style="max-width:700px;margin:30px auto;">
 
-<h3>📚 Class Wise PDF Notes</h3>
-
-<div class="cards">
-
-<div class="card">
-<h3>📘 Class 6</h3>
-<a href="pdf/class6.pdf" target="_blank" class="btn">Open Notes</a>
-</div>
-
-<div class="card">
-<h3>📗 Class 7</h3>
-<a href="pdf/class7.pdf" target="_blank" class="btn">Open Notes</a>
-</div>
-
-<div class="card">
-<h3>📙 Class 8</h3>
-<a href="pdf/class8.pdf" target="_blank" class="btn">Open Notes</a>
-</div>
-
-<div class="card">
-<h3>📕 Class 9</h3>
-<a href="pdf/class9.pdf" target="_blank" class="btn">Open Notes</a>
-</div>
-
-<div class="card">
-<h3>📓 Class 10</h3>
-<a href="pdf/class10.pdf" target="_blank" class="btn">Open Notes</a>
-</div>
-
-<div class="card">
-<h3>📔 Class 11</h3>
-<a href="pdf/class11.pdf" target="_blank" class="btn">Open Notes</a>
-</div>
-
-<div class="card">
-<h3>📒 Class 12</h3>
-<a href="pdf/class12.pdf" target="_blank" class="btn">Open Notes</a>
-</div>
-
-</div>
-</div>
-
-<p style="text-align:center;">
-<a href="index.html" class="btn">
-🏠 Home
-</a>
+<p class="subtitle">
+Class 6 से Class 12 तक Study Notes
 </p>
 
+
+<div
+id="notesList"
+class="notes-list">
+
+<div class="loading">
+
+⏳ Notes Loading...
+
+</div>
+
+</div>
+
+
+<a
+href="index.html"
+class="home">
+
+🏠 Home
+
+</a>
+
+
+
+<script type="module">
+
+
+import { db }
+from "./firebase.js";
+
+
+import {
+
+    collection,
+    getDocs
+
+}
+from
+"https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+
+
+
+const notesList =
+document.getElementById(
+    "notesList"
+);
+
+
+
+async function loadNotes(){
+
+
+    try{
+
+
+        const snapshot =
+        await getDocs(
+
+            collection(
+                db,
+                "notes"
+            )
+
+        );
+
+
+        const notes = [];
+
+
+        snapshot.forEach(
+        (item)=>{
+
+
+            const data =
+            item.data();
+
+
+            /*
+             * केवल Active Notes दिखाएँ
+             */
+
+            if(
+                data.active === false
+            ){
+
+                return;
+
+            }
+
+
+            notes.push({
+
+                id:item.id,
+
+                ...data
+
+            });
+
+        });
+
+
+
+        /*
+         * Class 6 → 7 → 8 → ... 12
+         */
+
+        notes.sort(
+        (a,b)=>{
+
+            const classA =
+            parseInt(
+                a.className
+            ) || 0;
+
+
+            const classB =
+            parseInt(
+                b.className
+            ) || 0;
+
+
+            return classA-classB;
+
+        });
+
+
+
+        notesList.innerHTML = "";
+
+
+        if(
+            notes.length === 0
+        ){
+
+            notesList.innerHTML = `
+
+                <div class="no-notes">
+
+                    <div style="
+                        font-size:60px;
+                    ">
+                        📚
+                    </div>
+
+                    <h2 style="
+                        color:#0b3d91;
+                        margin:15px 0;
+                    ">
+
+                        अभी कोई PDF Notes उपलब्ध नहीं हैं
+
+                    </h2>
+
+                    <p>
+
+                        Admin Panel से PDF Notes Upload करें।
+
+                    </p>
+
+                </div>
+
+            `;
+
+            return;
+
+        }
+
+
+
+        /*
+         * Class-wise grouping
+         */
+
+        let currentClass = "";
+
+
+
+        notes.forEach(
+        (note)=>{
+
+
+            const className =
+            note.className ||
+            "Other";
+
+
+            /*
+             * नया Class होने पर heading
+             */
+
+            if(
+                className !==
+                currentClass
+            ){
+
+                currentClass =
+                className;
+
+
+                const heading =
+                document.createElement(
+                    "h2"
+                );
+
+
+                heading.className =
+                "class-title";
+
+
+                heading.innerText =
+                "🎓 " + className;
+
+
+                notesList.appendChild(
+                    heading
+                );
+
+            }
+
+
+
+            const card =
+            document.createElement(
+                "div"
+            );
+
+
+            card.className =
+            "note-card";
+
+
+
+            const subject =
+            note.subject ||
+            "Study Notes";
+
+
+            const fileName =
+            note.name ||
+            "PDF Notes";
+
+
+            const url =
+            note.url ||
+            "";
+
+
+
+            card.innerHTML = `
+
+                <h2>
+
+                    📄 ${escapeHtml(
+                        subject
+                    )}
+
+                </h2>
+
+
+                <div class="subject">
+
+                    🎓 ${escapeHtml(
+                        className
+                    )}
+
+                </div>
+
+
+                <div class="file-name">
+
+                    📁 ${escapeHtml(
+                        fileName
+                    )}
+
+                </div>
+
+
+                <a
+
+                    href="${escapeHtml(url)}"
+
+                    target="_blank"
+
+                    rel="noopener noreferrer"
+
+                    class="open-btn">
+
+                    📖 Open PDF Notes
+
+                </a>
+
+            `;
+
+
+            notesList.appendChild(
+                card
+            );
+
+        });
+
+
+    }
+
+    catch(error){
+
+
+        console.error(
+            "Notes Error:",
+            error
+        );
+
+
+        notesList.innerHTML = `
+
+            <div class="no-notes">
+
+                <div style="
+                    font-size:60px;
+                ">
+
+                    ⚠️
+
+                </div>
+
+
+                <h2 style="
+                    color:#dc3545;
+                ">
+
+                    Notes Load नहीं हो पाए
+
+                </h2>
+
+
+                <p>
+
+                    Firebase / Firestore में समस्या है।
+
+                </p>
+
+
+                <p style="
+                    margin-top:15px;
+                    color:#777;
+                    font-size:12px;
+                ">
+
+                    ${escapeHtml(
+                        error.message
+                    )}
+
+                </p>
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+
+/*
+ * HTML Safety
+ */
+
+function escapeHtml(text){
+
+    return String(text)
+
+    .replace(/&/g,"&amp;")
+
+    .replace(/</g,"&lt;")
+
+    .replace(/>/g,"&gt;")
+
+    .replace(/"/g,"&quot;")
+
+    .replace(/'/g,"&#039;");
+
+}
+
+
+
+loadNotes();
+
+
+</script>
+
+
 </body>
+
 </html>

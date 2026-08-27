@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Course Management | MKG</title>
+
+<link rel="stylesheet" href="Style.css">
+
+<style>
+
+body{
+    padding:15px;
+}
+
+.container{
+    max-width:900px;
+    margin:auto;
+}
+
+.title{
+    text-align:center;
+    margin:25px 0;
+}
+
+.form-box{
+    background:#fff;
+    padding:20px;
+    border-radius:18px;
+    margin-bottom:25px;
+    box-shadow:0 5px 20px rgba(0,0,0,.12);
+}
+
+.form-box h2{
+    margin-bottom:18px;
+}
+
+label{
+    display:block;
+    margin-top:12px;
+    margin-bottom:6px;
+    font-weight:600;
+}
+
+input,
+textarea,
+select{
+    width:100%;
+    padding:12px;
+    border:1px solid #ddd;
+    border-radius:10px;
+    font-size:15px;
+}
+
+textarea{
+    min-height:90px;
+    resize:vertical;
+}
+
+button{
+    border:0;
+    cursor:pointer;
+}
+
+.save-btn{
+    width:100%;
+    margin-top:18px;
+    padding:13px;
+    border-radius:10px;
+
+    background:#0b5cff;
+    color:#fff;
+
+    font-size:16px;
+    font-weight:700;
+}
+
+.back-btn{
+    display:block;
+    text-align:center;
+    margin:15px auto;
+    text-decoration:none;
+}
+
+.course-list{
+    display:grid;
+    gap:15px;
+}
+
+.course-item{
+    background:#fff;
+    padding:18px;
+    border-radius:16px;
+
+    box-shadow:
+    0 4px 15px rgba(0,0,0,.10);
+}
+
+.course-item h3{
+    margin-bottom:8px;
+}
+
+.status{
+    display:inline-block;
+
+    padding:4px 10px;
+
+    border-radius:20px;
+
+    font-size:12px;
+
+    margin:6px 0;
+}
+
+.active{
+    background:#d8f8df;
+    color:#08752b;
+}
+
+.inactive{
+    background:#ffe0e0;
+    color:#a00000;
+}
+
+.actions{
+    display:flex;
+
+    gap:8px;
+
+    flex-wrap:wrap;
+
+    margin-top:12px;
+}
+
+.actions button{
+    padding:9px 14px;
+
+    border-radius:8px;
+
+    font-weight:600;
+}
+
+.edit-btn{
+    background:#ffc107;
+}
+
+.delete-btn{
+    background:#dc3545;
+
+    color:#fff;
+}
+
+@media(max-width:500px){
+
+    .actions button{
+        flex:1;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+<h1 class="title">
+📚 Course Management
+</h1>
+
+
+<!-- ADD / UPDATE COURSE -->
+
+<div class="form-box">
+
+
+<h2 id="formTitle">
+➕ Add / Update Course
+</h2>
+
+
+<label>
+Class
+</label>
+
+
+<select id="className">
+
+<option value="6">
+Class 6th
+</option>
+
+<option value="7">
+Class 7th
+</option>
+
+<option value="8">
+Class 8th
+</option>
+
+<option value="9">
+Class 9th
+</option>
+
+<option value="10">
+Class 10th
+</option>
+
+<option value="11">
+Class 11th
+</option>
+
+<option value="12">
+Class 12th
+</option>
+
+</select>
+
+
+<label>
+Course Description
+</label>
+
+
+<textarea
+id="description"
+placeholder="Course के बारे में जानकारी लिखें">
+</textarea>
+
+
+<label>
+YouTube Video Link
+</label>
+
+
+<input
+type="url"
+id="videoUrl"
+placeholder="https://youtube.com/...">
+
+
+<label>
+PDF Notes Link
+</label>
+
+
+<input
+type="text"
+id="pdfUrl"
+placeholder="pdf/class6.pdf या PDF URL">
+
+
+<label>
+Course Status
+</label>
+
+
+<select id="active">
+
+<option value="true">
+Active
+</option>
+
+<option value="false">
+Inactive
+</option>
+
+</select>
+
+
+<button
+class="save-btn"
+onclick="saveCourse()">
+
+💾 Save Course
+
+</button>
+
+
+</div>
+
+
+
+<!-- EXISTING COURSES -->
+
+<div class="form-box">
+
+
+<h2>
+📚 Existing Courses
+</h2>
+
+
+<div
+id="courseList"
+class="course-list">
+
+Loading...
+
+</div>
+
+
+</div>
+
+
+
+<a
+href="admin.html"
+class="back-btn btn">
+
+⬅️ Back to Admin Panel
+
+</a>
+
+
+</div>
+
+
+
+<script type="module">
+
+
+import { db, app }
+from "./firebase.js";
+
+
+import {
+
+    collection,
+    doc,
+    setDoc,
+    getDocs,
+    deleteDoc,
+    serverTimestamp
+
+}
+from
+"https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+
+
+import {
+
+    getAuth,
+    onAuthStateChanged
+
+}
+from
+"https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+
+
+
+const auth = getAuth(app);
+
+
+let editingId = null;
+
+
+
+/* =========================
+   ADMIN LOGIN CHECK
+========================= */
+
+
+onAuthStateChanged(auth,(user)=>{
+
+
+    if(!user){
+
+        alert("Please login as Admin");
+
+        window.location.href =
+        "admin-login.html";
+
+        return;
+
+    }
+
+
+    loadCourses();
+
+});
+
+
+
+/* =========================
+   SAVE COURSE
+========================= */
+
+
+window.saveCourse = async function(){
+
+
+    const className =
+    document
+    .getElementById("className")
+    .value;
+
+
+    const description =
+    document
+    .getElementById("description")
+    .value
+    .trim();
+
+
+    const videoUrl =
+    document
+    .getElementById("videoUrl")
+    .value
+    .trim();
+
+
+    const pdfUrl =
+    document
+    .getElementById("pdfUrl")
+    .value
+    .trim();
+
+
+    const active =
+    document
+    .getElementById("active")
+    .value === "true";
+
+
+    /* DESCRIPTION REQUIRED */
+
+    if(!description){
+
+        alert(
+            "Course description डालें"
+        );
+
+        return;
+
+    }
+
+
+    /* SAME ID FOR SAME CLASS */
+
+    const id =
+    editingId ||
+    "class" + className;
+
+
+
+    try{
+
+
+        await setDoc(
+
+            doc(
+                db,
+                "courses",
+                id
+            ),
+
+            {
+
+                /* BASIC INFORMATION */
+
+                className:
+                className,
+
+                title:
+                "Class " +
+                className +
+                "th",
+
+                description:
+                description,
+
+
+                /* VIDEO */
+
+                videoUrl:
+                videoUrl,
+
+                video:
+                videoUrl,
+
+
+                /* PDF */
+
+                pdfUrl:
+                pdfUrl,
+
+                pdf:
+                pdfUrl,
+
+
+                /* STATUS */
+
+                active:
+                active,
+
+                status:
+                active
+                ? "Active"
+                : "Inactive",
+
+
+                /* TIME */
+
+                updatedAt:
+                serverTimestamp()
+
+            },
+
+            {
+                merge:true
+            }
+
+        );
+
+
+        alert(
+            "✅ Course Successfully Saved"
+        );
+
+
+        editingId = null;
+
+
+        clearForm();
+
+
+        await loadCourses();
+
+
+    }
+
+    catch(error){
+
+        console.error(error);
+
+
+        alert(
+            "Error: " +
+            error.message
+        );
+
+    }
+
+
+};
+
+
+
+/* =========================
+   LOAD COURSES
+========================= */
+
+
+async function loadCourses(){
+
+
+    const list =
+    document.getElementById(
+        "courseList"
+    );
+
+
+    list.innerHTML =
+    "Loading...";
+
+
+    try{
+
+
+        const snapshot =
+        await getDocs(
+            collection(
+                db,
+                "courses"
+            )
+        );
+
+
+        if(snapshot.empty){
+
+            list.innerHTML =
+            "<p>अभी कोई Course नहीं है।</p>";
+
+            return;
+
+        }
+
+
+        list.innerHTML = "";
+
+
+        const courses = [];
+
+
+        snapshot.forEach((item)=>{
+
+
+            const data =
+            item.data();
+
+
+            courses.push({
+
+                id:
+                item.id,
+
+                ...data
+
+            });
+
+
+        });
+
+
+
+        /* SORT CLASS 6 → 12 */
+
+        courses.sort(
+
+            (a,b)=>
+
+            Number(
+                a.className ||
+                a.class ||
+                0
+            )
+
+            -
+
+            Number(
+                b.className ||
+                b.class ||
+                0
+            )
+
+        );
+
+
+
+        courses.forEach(
+        (course)=>{
+
+
+            const div =
+            document.createElement(
+                "div"
+            );
+
+
+            div.className =
+            "course-item";
+
+
+
+            /* SUPPORT OLD + NEW DATA */
+
+            const className =
+            course.className ||
+            course.class ||
+            course.name ||
+            "Unknown";
+
+
+            const description =
+            course.description ||
+            "";
+
+
+            const active =
+            course.active === true ||
+            course.status === "Active";
+
+
+
+            const statusClass =
+            active
+            ? "active"
+            : "inactive";
+
+
+            const statusText =
+            active
+            ? "Active"
+            : "Inactive";
+
+
+
+            div.innerHTML = `
+
+                <h3>
+                    📚 Class ${className}th
+                </h3>
+
+                <p>
+                    ${description}
+                </p>
+
+                <span
+                class="status ${statusClass}">
+
+                    ${statusText}
+
+                </span>
+
+                <div
+                class="actions">
+
+                    <button
+                    class="edit-btn"
+                    onclick='editCourse(${JSON.stringify(course)})'>
+
+                        ✏️ Edit
+
+                    </button>
+
+
+                    <button
+                    class="delete-btn"
+                    onclick="deleteCourse('${course.id}')">
+
+                        🗑 Delete
+
+                    </button>
+
+                </div>
+
+            `;
+
+
+            list.appendChild(
+                div
+            );
+
+
+        });
+
+
+    }
+
+    catch(error){
+
+
+        console.error(error);
+
+
+        list.innerHTML = `
+
+            <p>
+                Courses load नहीं हो सके।
+            </p>
+
+            <p style="color:red;font-size:13px;">
+                ${error.message}
+            </p>
+
+        `;
+
+    }
+
+}
+
+
+
+/* =========================
+   EDIT COURSE
+========================= */
+
+
+window.editCourse =
+function(course){
+
+
+    editingId =
+    course.id;
+
+
+    document
+    .getElementById("className")
+    .value =
+    course.className ||
+    course.class ||
+    "6";
+
+
+    document
+    .getElementById("description")
+    .value =
+    course.description ||
+    "";
+
+
+    document
+    .getElementById("videoUrl")
+    .value =
+    course.videoUrl ||
+    course.video ||
+    course.videoLink ||
+    course.youtube ||
+    "";
+
+
+    document
+    .getElementById("pdfUrl")
+    .value =
+    course.pdfUrl ||
+    course.pdf ||
+    course.pdfLink ||
+    "";
+
+
+    document
+    .getElementById("active")
+    .value =
+    String(
+        course.active !== undefined
+        ? course.active
+        : course.status === "Active"
+    );
+
+
+    document
+    .getElementById("formTitle")
+    .innerText =
+    "✏️ Edit Course";
+
+
+    window.scrollTo({
+
+        top:0,
+
+        behavior:"smooth"
+
+    });
+
+
+};
+
+
+
+/* =========================
+   DELETE COURSE
+========================= */
+
+
+window.deleteCourse =
+async function(id){
+
+
+    if(
+        !confirm(
+            "क्या आप इस Course को Delete करना चाहते हैं?"
+        )
+    ){
+
+        return;
+
+    }
+
+
+    try{
+
+
+        await deleteDoc(
+
+            doc(
+                db,
+                "courses",
+                id
+            )
+
+        );
+
+
+        alert(
+            "🗑 Course Deleted"
+        );
+
+
+        loadCourses();
+
+
+    }
+
+    catch(error){
+
+
+        alert(
+
+            "Delete Error: " +
+            error.message
+
+        );
+
+    }
+
+};
+
+
+
+/* =========================
+   CLEAR FORM
+========================= */
+
+
+function clearForm(){
+
+
+    editingId = null;
+
+
+    document
+    .getElementById("description")
+    .value = "";
+
+
+    document
+    .getElementById("videoUrl")
+    .value = "";
+
+
+    document
+    .getElementById("pdfUrl")
+    .value = "";
+
+
+    document
+    .getElementById("active")
+    .value = "true";
+
+
+    document
+    .getElementById("formTitle")
+    .innerText =
+    "➕ Add / Update Course";
+
+
+}
+
+
+</script>
+
+
+</body>
+</html>

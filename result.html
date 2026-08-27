@@ -1,13 +1,19 @@
 <!DOCTYPE html>
 <html lang="hi">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
 <title>Results | MKG Coaching Classes</title>
 
 <link rel="stylesheet" href="style.css">
 
 <style>
+
 *{
 margin:0;
 padding:0;
@@ -73,6 +79,30 @@ margin-bottom:15px;
 line-height:1.8;
 }
 
+.student-photo{
+width:150px;
+height:190px;
+object-fit:cover;
+border-radius:15px;
+border:4px solid #FFD700;
+display:block;
+margin:0 auto 18px;
+background:#fff;
+}
+
+.no-photo{
+width:150px;
+height:190px;
+border-radius:15px;
+border:3px solid #FFD700;
+display:flex;
+align-items:center;
+justify-content:center;
+margin:0 auto 18px;
+background:rgba(255,255,255,.15);
+font-size:50px;
+}
+
 .btn{
 display:inline-block;
 margin-top:35px;
@@ -99,12 +129,21 @@ font-size:40px;
 width:90%;
 }
 
+.student-photo,
+.no-photo{
+width:130px;
+height:165px;
 }
+
+}
+
 </style>
 
 </head>
 
+
 <body>
+
 
 <div class="header">
 
@@ -117,9 +156,19 @@ MKG <span>COACHING CLASSES</span>
 </h2>
 
 </div>
-<div class="card" style="max-width:600px;margin:0 auto 30px;">
 
-<h3>🔎 अपना Result खोजें</h3>
+
+
+<!-- SEARCH -->
+
+<div
+class="card"
+style="max-width:600px;margin:0 auto 30px;">
+
+<h3>
+🔎 अपना Result खोजें
+</h3>
+
 
 <input
 id="searchName"
@@ -128,6 +177,7 @@ placeholder="विद्यार्थी का नाम लिखें"
 style="width:100%;padding:14px;margin:8px 0;border-radius:10px;border:1px solid #ccc;"
 >
 
+
 <input
 id="searchClass"
 type="text"
@@ -135,177 +185,557 @@ placeholder="कक्षा लिखें"
 style="width:100%;padding:14px;margin:8px 0;border-radius:10px;border:1px solid #ccc;"
 >
 
-<button class="btn" id="searchResult">
+
+<button
+class="btn"
+id="searchResult">
+
 🔎 Search Result
+
 </button>
 
 </div>
-<div class="cards" id="resultList">
+
+
+
+<!-- RESULTS -->
+
+<div
+class="cards"
+id="resultList">
 
 <div class="card">
-<h3>🎓 Result 2026</h3>
+
+<h3>
+🎓 Result 2026
+</h3>
+
 <p>
 Results Loading...
 </p>
-</div>
 
 </div>
 
 </div>
+
+
 
 <div class="bottom">
 
-<a href="index.html" class="btn">
+<a
+href="index.html"
+class="btn">
+
 🏠 Home Page
+
 </a>
 
 </div>
+
+
+
 <script type="module">
-import { db } from "./firebase.js";
+
+
+import { db }
+from "./firebase.js";
+
 
 import {
-  collection,
-  getDocs,
-  query,
-  orderBy
-} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
 
-const resultList = document.getElementById("resultList");
-
-async function loadResults() {
-
-  try {
-
-    const resultsRef = collection(db, "results");
-
-    const resultsQuery = query(
-      resultsRef,
-      orderBy("percentage", "desc")
-    );
-
-    const snapshot = await getDocs(resultsQuery);
-
-    resultList.innerHTML = "";
-
-    if (snapshot.empty) {
-
-      resultList.innerHTML = `
-        <div class="card">
-          <h3>📊 Result</h3>
-          <p>अभी कोई Result उपलब्ध नहीं है।</p>
-        </div>
-      `;
-
-      return;
-    }
-
-    snapshot.forEach((resultDoc) => {
-
-      const data = resultDoc.data();
-
-      const card = document.createElement("div");
-
-      card.className = "card";
-
-      card.innerHTML = `
-        <h3>🎓 ${data.studentName}</h3>
-
-        <p>
-          🏫 कक्षा: ${data.studentClass}
-        </p>
-
-        <p>
-          📝 परीक्षा: ${data.examName}
-        </p>
-
-        <p>
-          📊 अंक: ${data.marks} / ${data.totalMarks}
-        </p>
-
-        <p>
-          🏆 प्रतिशत: ${data.percentage}%
-        </p>
-      `;
-
-      resultList.appendChild(card);
-
-    });
-
-  } catch (error) {
-
-    console.error("Result Load Error:", error);
-
-    resultList.innerHTML = `
-      <div class="card">
-        <h3>❌ Error</h3>
-        <p>Result Load नहीं हो पाया।</p>
-      </div>
-    `;
-
-  }
+collection,
+getDocs,
+query,
+orderBy
 
 }
-document.getElementById("searchResult").addEventListener("click", async function () {
 
-  const name = document.getElementById("searchName").value.trim().toLowerCase();
-  const studentClass = document.getElementById("searchClass").value.trim().toLowerCase();
+from
 
-  if (!name || !studentClass) {
-    alert("कृपया नाम और कक्षा दोनों भरें।");
-    return;
-  }
+"https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
 
-  try {
-    const resultsRef = collection(db, "results");
-    const snapshot = await getDocs(resultsRef);
 
-    resultList.innerHTML = "";
 
-    let found = false;
+const resultList =
+document.getElementById(
+"resultList"
+);
 
-    snapshot.forEach((resultDoc) => {
 
-      const data = resultDoc.data();
 
-      if (
-        String(data.studentName).toLowerCase() === name &&
-        String(data.studentClass).toLowerCase() === studentClass
-      ) {
+/* =================================
+   PHOTO HTML
+================================= */
 
-        found = true;
+function getPhotoHTML(photoURL){
 
-        const card = document.createElement("div");
-        card.className = "card";
+    if(!photoURL){
 
-        card.innerHTML = `
-          <h3>🏆 ${data.studentName}</h3>
-          <p>🏫 कक्षा: ${data.studentClass}</p>
-          <p>📝 परीक्षा: ${data.examName}</p>
-          <p>📊 अंक: ${data.marks} / ${data.totalMarks}</p>
-          <p>🥇 प्रतिशत: ${data.percentage}%</p>
+        return `
+
+        <div class="no-photo">
+        👨‍🎓
+        </div>
+
         `;
 
-        resultList.appendChild(card);
-      }
-    });
-
-    if (!found) {
-      resultList.innerHTML = `
-        <div class="card">
-          <h3>❌ Result नहीं मिला</h3>
-          <p>नाम और कक्षा सही भरें।</p>
-        </div>
-      `;
     }
 
-  } catch (error) {
-    console.error(error);
-    alert("❌ Result Search नहीं हो पाया।");
-  }
+
+    return `
+
+    <img
+
+    src="${escapeHTML(photoURL)}"
+
+    class="student-photo"
+
+    alt="Student Photo"
+
+    onerror="
+        this.outerHTML='<div class=&quot;no-photo&quot;>👨‍🎓</div>';
+    "
+
+    >
+
+    `;
+
+}
+
+
+
+/* =================================
+   LOAD ALL RESULTS
+================================= */
+
+async function loadResults(){
+
+    try{
+
+        const resultsRef =
+        collection(
+            db,
+            "results"
+        );
+
+
+        const resultsQuery =
+        query(
+
+            resultsRef,
+
+            orderBy(
+                "percentage",
+                "desc"
+            )
+
+        );
+
+
+        const snapshot =
+        await getDocs(
+            resultsQuery
+        );
+
+
+        resultList.innerHTML =
+        "";
+
+
+        if(snapshot.empty){
+
+            resultList.innerHTML = `
+
+            <div class="card">
+
+            <h3>
+            📊 Result
+            </h3>
+
+            <p>
+            अभी कोई Result उपलब्ध नहीं है।
+            </p>
+
+            </div>
+
+            `;
+
+            return;
+
+        }
+
+
+        snapshot.forEach(
+        (resultDoc)=>{
+
+
+            const data =
+            resultDoc.data();
+
+
+            const card =
+            document.createElement(
+                "div"
+            );
+
+
+            card.className =
+            "card";
+
+
+            card.innerHTML = `
+
+                ${getPhotoHTML(
+                    data.photoURL
+                )}
+
+
+                <h3>
+                🎓 ${escapeHTML(
+                    data.studentName || "-"
+                )}
+                </h3>
+
+
+                <p>
+                🆔 Student ID:
+                ${escapeHTML(
+                    data.studentId || "-"
+                )}
+                </p>
+
+
+                <p>
+                🏫 कक्षा:
+                ${escapeHTML(
+                    data.studentClass || "-"
+                )}
+                </p>
+
+
+                <p>
+                📝 परीक्षा:
+                ${escapeHTML(
+                    data.examName || "-"
+                )}
+                </p>
+
+
+                <p>
+                📊 अंक:
+                ${data.marks || 0}
+                /
+                ${data.totalMarks || 0}
+                </p>
+
+
+                <p>
+                🏆 प्रतिशत:
+                ${data.percentage || 0}%
+                </p>
+
+            `;
+
+
+            resultList.appendChild(
+                card
+            );
+
+        });
+
+
+    }
+
+    catch(error){
+
+        console.error(
+            "Result Load Error:",
+            error
+        );
+
+
+        resultList.innerHTML = `
+
+        <div class="card">
+
+        <h3>
+        ❌ Error
+        </h3>
+
+        <p>
+        Result Load नहीं हो पाया।
+        </p>
+
+        </div>
+
+        `;
+
+    }
+
+}
+
+
+
+/* =================================
+   SEARCH RESULT
+================================= */
+
+document
+.getElementById(
+    "searchResult"
+)
+.addEventListener(
+"click",
+async function(){
+
+
+    const name =
+    document
+    .getElementById(
+        "searchName"
+    )
+    .value
+    .trim()
+    .toLowerCase();
+
+
+    const studentClass =
+    document
+    .getElementById(
+        "searchClass"
+    )
+    .value
+    .trim()
+    .toLowerCase();
+
+
+    if(
+        !name ||
+        !studentClass
+    ){
+
+        alert(
+            "कृपया नाम और कक्षा दोनों भरें।"
+        );
+
+        return;
+
+    }
+
+
+    try{
+
+
+        const resultsRef =
+        collection(
+            db,
+            "results"
+        );
+
+
+        const snapshot =
+        await getDocs(
+            resultsRef
+        );
+
+
+        resultList.innerHTML =
+        "";
+
+
+        let found =
+        false;
+
+
+        snapshot.forEach(
+        (resultDoc)=>{
+
+
+            const data =
+            resultDoc.data();
+
+
+            if(
+
+                String(
+                    data.studentName || ""
+                )
+                .toLowerCase()
+                === name
+
+                &&
+
+                String(
+                    data.studentClass || ""
+                )
+                .toLowerCase()
+                === studentClass
+
+            ){
+
+                found =
+                true;
+
+
+                const card =
+                document.createElement(
+                    "div"
+                );
+
+
+                card.className =
+                "card";
+
+
+                card.innerHTML = `
+
+                    ${getPhotoHTML(
+                        data.photoURL
+                    )}
+
+
+                    <h3>
+                    🏆 ${escapeHTML(
+                        data.studentName || "-"
+                    )}
+                    </h3>
+
+
+                    <p>
+                    🆔 Student ID:
+                    ${escapeHTML(
+                        data.studentId || "-"
+                    )}
+                    </p>
+
+
+                    <p>
+                    🏫 कक्षा:
+                    ${escapeHTML(
+                        data.studentClass || "-"
+                    )}
+                    </p>
+
+
+                    <p>
+                    📝 परीक्षा:
+                    ${escapeHTML(
+                        data.examName || "-"
+                    )}
+                    </p>
+
+
+                    <p>
+                    📊 अंक:
+                    ${data.marks || 0}
+                    /
+                    ${data.totalMarks || 0}
+                    </p>
+
+
+                    <p>
+                    🥇 प्रतिशत:
+                    ${data.percentage || 0}%
+                    </p>
+
+                `;
+
+
+                resultList.appendChild(
+                    card
+                );
+
+            }
+
+        });
+
+
+        if(!found){
+
+            resultList.innerHTML = `
+
+            <div class="card">
+
+            <h3>
+            ❌ Result नहीं मिला
+            </h3>
+
+            <p>
+            नाम और कक्षा सही भरें।
+            </p>
+
+            </div>
+
+            `;
+
+        }
+
+
+    }
+
+    catch(error){
+
+        console.error(
+            error
+        );
+
+
+        alert(
+            "❌ Result Search नहीं हो पाया।"
+        );
+
+    }
 
 });
+
+
+
+/* =================================
+   HTML SECURITY
+================================= */
+
+function escapeHTML(value){
+
+    return String(value)
+
+    .replace(
+        /&/g,
+        "&amp;"
+    )
+
+    .replace(
+        /</g,
+        "&lt;"
+    )
+
+    .replace(
+        />/g,
+        "&gt;"
+    )
+
+    .replace(
+        /"/g,
+        "&quot;"
+    )
+
+    .replace(
+        /'/g,
+        "&#039;"
+    );
+
+}
+
+
+
+/* =================================
+   START
+================================= */
+
 loadResults();
 
 </script>
+
+
 </body>
+
 </html>

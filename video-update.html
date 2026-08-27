@@ -1,83 +1,905 @@
 <!DOCTYPE html>
 <html lang="hi">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
 <title>Video Upload | MKG Coaching Classes</title>
 
 <link rel="stylesheet" href="Style.css">
 
 <style>
+
 body{
-font-family:Poppins,sans-serif;
-background:#f5f7fb;
-padding:20px;
+    font-family:Poppins,sans-serif;
+    background:#f5f7fb;
+    padding:20px;
 }
 
 .card{
-max-width:600px;
-margin:auto;
-background:white;
-padding:20px;
-border-radius:15px;
-box-shadow:0 5px 15px rgba(0,0,0,.15);
+    max-width:700px;
+    margin:auto;
+
+    background:white;
+
+    padding:20px;
+
+    border-radius:15px;
+
+    box-shadow:
+    0 5px 15px rgba(0,0,0,.15);
 }
 
-input,select{
-width:100%;
-padding:12px;
-margin:10px 0;
-border-radius:8px;
-border:1px solid #ccc;
+h2{
+    text-align:center;
+    color:#0b3d91;
+}
+
+label{
+    display:block;
+    margin-top:15px;
+    font-weight:600;
+}
+
+input,
+select{
+
+    width:100%;
+
+    padding:12px;
+
+    margin-top:7px;
+
+    border-radius:8px;
+
+    border:1px solid #ccc;
+
+    font-size:15px;
+
+    box-sizing:border-box;
 }
 
 .btn{
-padding:12px 20px;
-background:#0b3d91;
-color:white;
-border:none;
-border-radius:8px;
-cursor:pointer;
-width:100%;
+
+    padding:12px 20px;
+
+    background:#0b3d91;
+
+    color:white;
+
+    border:none;
+
+    border-radius:8px;
+
+    cursor:pointer;
+
+    width:100%;
+
+    margin-top:20px;
+
+    font-size:16px;
+
+    font-weight:bold;
 }
+
+.status{
+    text-align:center;
+    margin-top:15px;
+    font-weight:bold;
+}
+
+.video-list{
+    margin-top:25px;
+}
+
+.video-item{
+
+    background:#f7f9fc;
+
+    padding:15px;
+
+    margin-top:12px;
+
+    border-radius:12px;
+
+    border:1px solid #ddd;
+}
+
+.video-item h3{
+    margin:0 0 7px;
+    color:#0b3d91;
+}
+
+.video-item p{
+    margin:5px 0;
+}
+
+.actions{
+    display:flex;
+    gap:8px;
+    margin-top:12px;
+}
+
+.actions button{
+
+    flex:1;
+
+    padding:9px;
+
+    border:none;
+
+    border-radius:7px;
+
+    cursor:pointer;
+
+    font-weight:bold;
+}
+
+.edit{
+    background:#ffc107;
+}
+
+.delete{
+    background:#dc3545;
+    color:white;
+}
+
+.back{
+    display:block;
+
+    text-align:center;
+
+    margin-top:20px;
+
+    color:#0b3d91;
+
+    text-decoration:none;
+
+    font-weight:bold;
+}
+
+@media(max-width:500px){
+
+    .actions{
+        flex-direction:column;
+    }
+
+}
+
 </style>
 
 </head>
 
+
 <body>
+
 
 <div class="card">
 
-<h2>🎥 Upload Video</h2>
+
+<h2>
+🎥 Video Management
+</h2>
+
+
+<label>
+🎓 Select Class
+</label>
+
 
 <select id="className">
-<option value="">Select Class</option>
-<option>Class 6</option>
-<option>Class 7</option>
-<option>Class 8</option>
-<option>Class 9</option>
-<option>Class 10</option>
-<option>Class 11</option>
-<option>Class 12</option>
+
+<option value="">
+Select Class
+</option>
+
+<option value="Class 6">
+Class 6
+</option>
+
+<option value="Class 7">
+Class 7
+</option>
+
+<option value="Class 8">
+Class 8
+</option>
+
+<option value="Class 9">
+Class 9
+</option>
+
+<option value="Class 10">
+Class 10
+</option>
+
+<option value="Class 11">
+Class 11
+</option>
+
+<option value="Class 12">
+Class 12
+</option>
+
 </select>
+
+
+
+<label>
+📚 Subject Name
+</label>
+
 
 <input
 type="text"
 id="subject"
-placeholder="Subject Name">
+placeholder="जैसे Mathematics">
+
+
+
+<label>
+🎥 YouTube Video Link
+</label>
+
 
 <input
-type="text"
+type="url"
 id="videoLink"
-placeholder="YouTube Video Link">
+placeholder="https://www.youtube.com/watch?v=...">
+
+
 
 <button
 class="btn"
 id="saveVideo">
-Save Video
+
+💾 Save Video
+
 </button>
+
+
+<div
+id="status"
+class="status">
+</div>
+
+
+
+<div class="video-list">
+
+
+<h3>
+📋 Saved Videos
+</h3>
+
+
+<div id="videoList">
+
+Loading...
 
 </div>
 
+
+</div>
+
+
+
+<a
+href="admin.html"
+class="back">
+
+⬅️ Back to Admin Panel
+
+</a>
+
+
+</div>
+
+
+
+<script type="module">
+
+
+import { db, app }
+from "./firebase.js";
+
+
+import {
+
+    collection,
+    addDoc,
+    doc,
+    updateDoc,
+    deleteDoc,
+    getDocs,
+    serverTimestamp
+
+}
+from
+"https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+
+
+import {
+
+    getAuth,
+    onAuthStateChanged
+
+}
+from
+"https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+
+
+
+const auth =
+getAuth(app);
+
+
+
+let editingId = null;
+
+
+
+/* =========================
+   ADMIN LOGIN CHECK
+========================= */
+
+
+onAuthStateChanged(
+auth,
+(user)=>{
+
+
+    if(!user){
+
+        alert(
+            "Please login as Admin"
+        );
+
+        window.location.href =
+        "admin-login.html";
+
+        return;
+
+    }
+
+
+    loadVideos();
+
+});
+
+
+
+/* =========================
+   SAVE VIDEO
+========================= */
+
+
+document
+.getElementById("saveVideo")
+.addEventListener(
+"click",
+async ()=>{
+
+
+    const className =
+    document
+    .getElementById("className")
+    .value;
+
+
+    const subject =
+    document
+    .getElementById("subject")
+    .value
+    .trim();
+
+
+    const videoLink =
+    document
+    .getElementById("videoLink")
+    .value
+    .trim();
+
+
+
+    if(!className){
+
+        alert(
+            "कृपया Class Select करें"
+        );
+
+        return;
+
+    }
+
+
+    if(!subject){
+
+        alert(
+            "कृपया Subject Name डालें"
+        );
+
+        return;
+
+    }
+
+
+    if(!videoLink){
+
+        alert(
+            "कृपया YouTube Video Link डालें"
+        );
+
+        return;
+
+    }
+
+
+
+    const status =
+    document.getElementById(
+        "status"
+    );
+
+
+    status.innerText =
+    "⏳ Saving...";
+
+
+
+    try{
+
+
+        const videoData = {
+
+            className:
+            className,
+
+            subject:
+            subject,
+
+            videoLink:
+            videoLink,
+
+            active:
+            true,
+
+            updatedAt:
+            serverTimestamp()
+
+        };
+
+
+
+        if(editingId){
+
+
+            await updateDoc(
+
+                doc(
+                    db,
+                    "videos",
+                    editingId
+                ),
+
+                videoData
+
+            );
+
+
+            status.innerText =
+            "✅ Video Updated";
+
+
+        }else{
+
+
+            videoData.createdAt =
+            serverTimestamp();
+
+
+            await addDoc(
+
+                collection(
+                    db,
+                    "videos"
+                ),
+
+                videoData
+
+            );
+
+
+            status.innerText =
+            "✅ Video Saved";
+
+        }
+
+
+
+        editingId = null;
+
+
+        clearForm();
+
+
+        loadVideos();
+
+
+    }
+
+    catch(error){
+
+        console.error(error);
+
+
+        status.innerText =
+        "❌ Error";
+
+
+        alert(
+            "Error: " +
+            error.message
+        );
+
+    }
+
+});
+
+
+
+/* =========================
+   LOAD VIDEOS
+========================= */
+
+
+async function loadVideos(){
+
+
+    const list =
+    document.getElementById(
+        "videoList"
+    );
+
+
+    list.innerHTML =
+    "Loading...";
+
+
+    try{
+
+
+        const snapshot =
+        await getDocs(
+
+            collection(
+                db,
+                "videos"
+            )
+
+        );
+
+
+        list.innerHTML =
+        "";
+
+
+        if(snapshot.empty){
+
+            list.innerHTML =
+            "<p>अभी कोई Video नहीं है।</p>";
+
+            return;
+
+        }
+
+
+        const videos = [];
+
+
+        snapshot.forEach(
+        (item)=>{
+
+            videos.push({
+
+                id:
+                item.id,
+
+                ...item.data()
+
+            });
+
+        });
+
+
+
+        /* CLASS ORDER */
+
+        videos.sort(
+        (a,b)=>{
+
+            const classA =
+            parseInt(
+                a.className
+            ) || 0;
+
+            const classB =
+            parseInt(
+                b.className
+            ) || 0;
+
+            return classA-classB;
+
+        });
+
+
+
+        videos.forEach(
+        (video)=>{
+
+
+            const div =
+            document.createElement(
+                "div"
+            );
+
+
+            div.className =
+            "video-item";
+
+
+            div.innerHTML = `
+
+                <h3>
+                    🎓 ${video.className}
+                </h3>
+
+                <p>
+                    📚 <strong>
+                    ${escapeHtml(video.subject || "")}
+                    </strong>
+                </p>
+
+                <p style="
+                    font-size:12px;
+                    word-break:break-all;
+                ">
+
+                    🔗 ${escapeHtml(video.videoLink || "")}
+
+                </p>
+
+
+                <div class="actions">
+
+                    <button
+                    class="edit"
+                    onclick='editVideo(${JSON.stringify(video)})'>
+
+                        ✏️ Edit
+
+                    </button>
+
+
+                    <button
+                    class="delete"
+                    onclick="deleteVideo('${video.id}')">
+
+                        🗑 Delete
+
+                    </button>
+
+                </div>
+
+            `;
+
+
+            list.appendChild(
+                div
+            );
+
+        });
+
+
+    }
+
+    catch(error){
+
+        console.error(error);
+
+
+        list.innerHTML = `
+
+            <p style="color:red;">
+
+                Videos load नहीं हो सके।
+
+            </p>
+
+            <p style="font-size:12px;">
+
+                ${error.message}
+
+            </p>
+
+        `;
+
+    }
+
+}
+
+
+
+/* =========================
+   EDIT VIDEO
+========================= */
+
+
+window.editVideo =
+function(video){
+
+
+    editingId =
+    video.id;
+
+
+    document
+    .getElementById("className")
+    .value =
+    video.className || "";
+
+
+    document
+    .getElementById("subject")
+    .value =
+    video.subject || "";
+
+
+    document
+    .getElementById("videoLink")
+    .value =
+    video.videoLink || "";
+
+
+    document
+    .getElementById("saveVideo")
+    .innerText =
+    "💾 Update Video";
+
+
+    window.scrollTo({
+
+        top:0,
+
+        behavior:"smooth"
+
+    });
+
+};
+
+
+
+/* =========================
+   DELETE VIDEO
+========================= */
+
+
+window.deleteVideo =
+async function(id){
+
+
+    if(
+        !confirm(
+            "क्या आप यह Video Delete करना चाहते हैं?"
+        )
+    ){
+
+        return;
+
+    }
+
+
+    try{
+
+
+        await deleteDoc(
+
+            doc(
+                db,
+                "videos",
+                id
+            )
+
+        );
+
+
+        alert(
+            "🗑 Video Deleted"
+        );
+
+
+        loadVideos();
+
+
+    }
+
+    catch(error){
+
+        alert(
+            "Delete Error: " +
+            error.message
+        );
+
+    }
+
+};
+
+
+
+/* =========================
+   CLEAR FORM
+========================= */
+
+
+function clearForm(){
+
+
+    editingId = null;
+
+
+    document
+    .getElementById("className")
+    .value = "";
+
+
+    document
+    .getElementById("subject")
+    .value = "";
+
+
+    document
+    .getElementById("videoLink")
+    .value = "";
+
+
+    document
+    .getElementById("saveVideo")
+    .innerText =
+    "💾 Save Video";
+
+}
+
+
+
+/* =========================
+   HTML SAFETY
+========================= */
+
+
+function escapeHtml(text){
+
+    return String(text)
+
+    .replace(/&/g,"&amp;")
+
+    .replace(/</g,"&lt;")
+
+    .replace(/>/g,"&gt;")
+
+    .replace(/"/g,"&quot;")
+
+    .replace(/'/g,"&#039;");
+
+}
+
+
+</script>
+
+
 </body>
+
 </html>

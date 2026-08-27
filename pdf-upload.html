@@ -1,108 +1,1000 @@
 <!DOCTYPE html>
 <html lang="hi">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Upload PDF | MKG Coaching Classes</title>
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>PDF Notes Management | MKG Coaching Classes</title>
 
 <link rel="stylesheet" href="Style.css">
+
+<style>
+
+body{
+    padding:20px;
+    background:#f5f7fb;
+}
+
+.card{
+    max-width:700px;
+    margin:auto;
+    background:#fff;
+    padding:25px;
+    border-radius:18px;
+    box-shadow:0 8px 25px rgba(0,0,0,.12);
+}
+
+h2{
+    text-align:center;
+    color:#0b3d91;
+    margin-bottom:25px;
+}
+
+label{
+    display:block;
+    margin-top:17px;
+    font-weight:bold;
+    font-size:18px;
+}
+
+input,
+select{
+    width:100%;
+    padding:14px;
+    margin-top:8px;
+    border:1px solid #ccc;
+    border-radius:10px;
+    box-sizing:border-box;
+    font-size:16px;
+    background:#fff;
+}
+
+.btn{
+    width:100%;
+    padding:15px;
+    margin-top:22px;
+    background:#0b3d91;
+    color:#fff;
+    border:none;
+    border-radius:10px;
+    font-size:18px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.btn:disabled{
+    opacity:.6;
+}
+
+.status{
+    text-align:center;
+    margin-top:18px;
+    font-weight:bold;
+    line-height:1.5;
+}
+
+.pdf-list{
+    margin-top:35px;
+}
+
+.pdf-list h3{
+    color:#0b3d91;
+}
+
+.pdf-item{
+    background:#f7f9fc;
+    padding:15px;
+    margin-top:12px;
+    border-radius:12px;
+    border:1px solid #ddd;
+}
+
+.pdf-item h3{
+    margin:0 0 8px;
+    color:#0b3d91;
+}
+
+.pdf-item p{
+    margin:7px 0;
+}
+
+.actions{
+    display:flex;
+    gap:8px;
+    margin-top:13px;
+}
+
+.actions button{
+    flex:1;
+    padding:10px;
+    border:none;
+    border-radius:8px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.open{
+    background:#198754;
+    color:#fff;
+}
+
+.delete{
+    background:#dc3545;
+    color:#fff;
+}
+
+.back{
+    display:block;
+    text-align:center;
+    margin-top:25px;
+    color:#0b3d91;
+    font-weight:bold;
+    text-decoration:none;
+    font-size:17px;
+}
+
+</style>
+
 </head>
+
 
 <body>
 
-<h1 style="text-align:center;margin-top:30px;">
-📄 PDF Upload
-</h1>
 
-<div class="card" style="max-width:500px;margin:30px auto;">
+<div class="card">
 
-<h3>Upload PDF Notes</h3>
+
+<h2>
+📄 PDF Notes Management
+</h2>
+
+
+<label>
+🎓 Select Class
+</label>
+
+
+<select id="className">
+
+<option value="">
+Select Class
+</option>
+
+<option value="Class 6">Class 6</option>
+<option value="Class 7">Class 7</option>
+<option value="Class 8">Class 8</option>
+<option value="Class 9">Class 9</option>
+<option value="Class 10">Class 10</option>
+<option value="Class 11">Class 11</option>
+<option value="Class 12">Class 12</option>
+
+</select>
+
+
+<label>
+📚 Subject Name
+</label>
+
+
+<input
+type="text"
+id="subject"
+placeholder="जैसे Mathematics">
+
+
+<label>
+📄 Select PDF
+</label>
+
 
 <input
 type="file"
 id="pdfFile"
-accept=".pdf">
+accept=".pdf,application/pdf">
 
-<br><br>
 
-<button class="btn" id="uploadPDF">
+<button
+class="btn"
+id="uploadPDF">
+
 📤 Upload PDF
+
 </button>
+
+
+<div
+id="status"
+class="status">
+</div>
+
+
+<div class="pdf-list">
+
+<h3>
+📋 Uploaded PDFs
+</h3>
+
+
+<div id="pdfList">
+
+Loading...
 
 </div>
 
-<p style="text-align:center;">
-<a href="admin.html" class="btn">
-⬅ Back to Admin Panel
+</div>
+
+
+<a
+href="admin.html"
+class="back">
+
+⬅️ Back to Admin Panel
+
 </a>
-</p>
+
+
+</div>
+
+
 
 <script type="module">
 
-import { app } from "./firebase.js";
+
+/* =================================
+   FIREBASE
+================================= */
 
 import {
-getStorage,
-ref,
-uploadBytes,
-getDownloadURL
-} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-storage.js";
+    app,
+    db
+} from "./firebase.js";
+
 
 import {
-getFirestore,
-collection,
-addDoc,
-serverTimestamp
-} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
 
-const storage = getStorage(app);
-const db = getFirestore(app);
-
-document.getElementById("uploadPDF").addEventListener("click", async () => {
-
-const file = document.getElementById("pdfFile").files[0];
-
-if (!file){
-
-alert("पहले PDF चुनें");
-
-return;
+    collection,
+    addDoc,
+    getDocs,
+    doc,
+    deleteDoc,
+    serverTimestamp
 
 }
+from
+"https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
 
-try{
 
-const storageRef = ref(storage,"pdf/"+file.name);
+import {
 
-await uploadBytes(storageRef,file);
+    getAuth,
+    onAuthStateChanged
 
-const url = await getDownloadURL(storageRef);
+}
+from
+"https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
 
-await addDoc(collection(db,"notes"),{
 
-name:file.name,
 
-url:url,
+/* =================================
+   CLOUDINARY SETTINGS
+================================= */
 
-createdAt:serverTimestamp()
+const CLOUD_NAME =
+"pa5iwcv8";
+
+
+const UPLOAD_PRESET =
+"mkg_images";
+
+
+
+/* =================================
+   AUTH
+================================= */
+
+const auth =
+getAuth(app);
+
+
+
+/* =================================
+   ELEMENTS
+================================= */
+
+const uploadButton =
+document.getElementById(
+"uploadPDF"
+);
+
+
+const status =
+document.getElementById(
+"status"
+);
+
+
+const pdfList =
+document.getElementById(
+"pdfList"
+);
+
+
+
+/* =================================
+   ADMIN LOGIN CHECK
+================================= */
+
+onAuthStateChanged(
+auth,
+(user)=>{
+
+    if(!user){
+
+        alert(
+            "Please login as Admin"
+        );
+
+        window.location.href =
+        "admin-login.html";
+
+        return;
+
+    }
+
+
+    loadPDFs();
 
 });
 
-alert("✅ PDF सफलतापूर्वक Upload हो गया");
 
-document.getElementById("pdfFile").value="";
 
-}catch(error){
+/* =================================
+   UPLOAD PDF
+================================= */
 
-console.error(error);
+uploadButton.addEventListener(
+"click",
+async ()=>{
 
-alert("❌ PDF Upload Failed");
+
+    const className =
+    document.getElementById(
+        "className"
+    ).value;
+
+
+    const subject =
+    document.getElementById(
+        "subject"
+    ).value.trim();
+
+
+    const file =
+    document.getElementById(
+        "pdfFile"
+    ).files[0];
+
+
+
+    /* CLASS CHECK */
+
+    if(!className){
+
+        alert(
+            "कृपया Class Select करें"
+        );
+
+        return;
+
+    }
+
+
+
+    /* SUBJECT CHECK */
+
+    if(!subject){
+
+        alert(
+            "कृपया Subject Name डालें"
+        );
+
+        return;
+
+    }
+
+
+
+    /* FILE CHECK */
+
+    if(!file){
+
+        alert(
+            "कृपया PDF Select करें"
+        );
+
+        return;
+
+    }
+
+
+
+    /* PDF CHECK */
+
+    if(
+        file.type !== "application/pdf"
+        &&
+        !file.name
+        .toLowerCase()
+        .endsWith(".pdf")
+    ){
+
+        alert(
+            "केवल PDF File Upload करें"
+        );
+
+        return;
+
+    }
+
+
+
+    /* SIZE CHECK */
+
+    if(
+        file.size >
+        20 * 1024 * 1024
+    ){
+
+        alert(
+            "PDF का size 20MB से कम होना चाहिए"
+        );
+
+        return;
+
+    }
+
+
+
+    status.style.color =
+    "#0b3d91";
+
+
+    status.innerText =
+    "⏳ PDF Upload हो रही है...";
+
+
+    uploadButton.disabled =
+    true;
+
+
+
+    try{
+
+
+        /* =================================
+           CLOUDINARY FORM DATA
+        ================================= */
+
+        const formData =
+        new FormData();
+
+
+        formData.append(
+            "file",
+            file
+        );
+
+
+        formData.append(
+            "upload_preset",
+            UPLOAD_PRESET
+        );
+
+
+
+        /* =================================
+           CLOUDINARY UPLOAD
+        ================================= */
+
+        const response =
+        await fetch(
+
+            `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/auto/upload`,
+
+            {
+                method:"POST",
+                body:formData
+            }
+
+        );
+
+
+
+        const data =
+        await response.json();
+
+
+
+        if(!response.ok){
+
+            throw new Error(
+
+                data.error?.message ||
+                "Cloudinary Upload Failed"
+
+            );
+
+        }
+
+
+
+        /* =================================
+           CLOUDINARY URL
+        ================================= */
+
+        const pdfUrl =
+        data.secure_url;
+
+
+
+        if(!pdfUrl){
+
+            throw new Error(
+                "PDF URL नहीं मिला"
+            );
+
+        }
+
+
+
+        status.innerText =
+        "⏳ PDF Database में Save हो रही है...";
+
+
+
+        /* =================================
+           FIRESTORE
+        ================================= */
+
+        await addDoc(
+
+            collection(
+                db,
+                "notes"
+            ),
+
+            {
+
+                className:
+                className,
+
+                subject:
+                subject,
+
+                name:
+                file.name,
+
+                url:
+                pdfUrl,
+
+                publicId:
+                data.public_id || "",
+
+                resourceType:
+                data.resource_type || "raw",
+
+                format:
+                data.format || "pdf",
+
+                active:
+                true,
+
+                createdAt:
+                serverTimestamp()
+
+            }
+
+        );
+
+
+
+        /* =================================
+           SUCCESS
+        ================================= */
+
+        status.style.color =
+        "green";
+
+
+        status.innerText =
+        "✅ PDF सफलतापूर्वक Upload हो गई";
+
+
+
+        /* RESET */
+
+        document.getElementById(
+            "className"
+        ).value = "";
+
+
+        document.getElementById(
+            "subject"
+        ).value = "";
+
+
+        document.getElementById(
+            "pdfFile"
+        ).value = "";
+
+
+
+        /* LOAD AGAIN */
+
+        loadPDFs();
+
+
+    }
+
+
+    catch(error){
+
+        console.error(
+            "PDF Upload Error:",
+            error
+        );
+
+
+        status.style.color =
+        "red";
+
+
+        status.innerText =
+        "❌ PDF Upload Failed";
+
+
+        alert(
+            "PDF Upload Error:\n\n" +
+            error.message
+        );
+
+    }
+
+
+    uploadButton.disabled =
+    false;
+
+});
+
+
+
+/* =================================
+   LOAD PDFs
+================================= */
+
+async function loadPDFs(){
+
+
+    pdfList.innerHTML =
+    "⏳ Loading...";
+
+
+    try{
+
+
+        const snapshot =
+        await getDocs(
+
+            collection(
+                db,
+                "notes"
+            )
+
+        );
+
+
+        pdfList.innerHTML =
+        "";
+
+
+
+        if(snapshot.empty){
+
+            pdfList.innerHTML =
+            "<p>अभी कोई PDF Upload नहीं है।</p>";
+
+            return;
+
+        }
+
+
+
+        const pdfs = [];
+
+
+
+        snapshot.forEach(
+        (item)=>{
+
+            pdfs.push({
+
+                id:
+                item.id,
+
+                ...item.data()
+
+            });
+
+        });
+
+
+
+        /* CLASS ORDER */
+
+        pdfs.sort(
+        (a,b)=>{
+
+            const classA =
+            parseInt(
+                a.className
+            ) || 0;
+
+
+            const classB =
+            parseInt(
+                b.className
+            ) || 0;
+
+
+            return classA -
+                   classB;
+
+        });
+
+
+
+        /* DISPLAY */
+
+        pdfs.forEach(
+        (pdf)=>{
+
+
+            const div =
+            document.createElement(
+                "div"
+            );
+
+
+            div.className =
+            "pdf-item";
+
+
+
+            div.innerHTML = `
+
+                <h3>
+                    📚 ${escapeHtml(
+                        pdf.className || ""
+                    )}
+                </h3>
+
+                <p>
+                    📖 <strong>
+                    ${escapeHtml(
+                        pdf.subject || ""
+                    )}
+                    </strong>
+                </p>
+
+                <p>
+                    📄 ${escapeHtml(
+                        pdf.name || "PDF"
+                    )}
+                </p>
+
+                <div class="actions">
+
+                    <button
+                    class="open"
+                    onclick="openPDF('${encodeURIComponent(
+                        pdf.url || ""
+                    )}')">
+
+                    📄 Open PDF
+
+                    </button>
+
+
+                    <button
+                    class="delete"
+                    onclick="deletePDF('${pdf.id}')">
+
+                    🗑 Delete
+
+                    </button>
+
+                </div>
+
+            `;
+
+
+            pdfList.appendChild(
+                div
+            );
+
+        });
+
+
+    }
+
+
+    catch(error){
+
+        console.error(
+            "PDF Load Error:",
+            error
+        );
+
+
+        pdfList.innerHTML = `
+
+        <p style="color:red;">
+
+        ❌ PDFs Load नहीं हो सके।
+
+        <br><br>
+
+        ${escapeHtml(
+            error.message
+        )}
+
+        </p>
+
+        `;
+
+    }
 
 }
 
-});
+
+
+/* =================================
+   OPEN PDF
+================================= */
+
+window.openPDF =
+function(encodedUrl){
+
+    let url =
+    decodeURIComponent(encodedUrl);
+
+    if(!url){
+
+        alert("PDF URL उपलब्ध नहीं है");
+        return;
+
+    }
+
+    // Cloudinary PDF URL में .pdf सुनिश्चित करें
+    if(!url.toLowerCase().endsWith(".pdf")){
+
+        url += ".pdf";
+
+    }
+
+    window.open(
+        url,
+        "_blank"
+    );
+
+};
+
+
+
+/* =================================
+   DELETE PDF
+================================= */
+
+window.deletePDF =
+async function(id){
+
+
+    if(!confirm(
+        "क्या आप यह PDF Delete करना चाहते हैं?"
+    )){
+
+        return;
+
+    }
+
+
+
+    try{
+
+
+        await deleteDoc(
+
+            doc(
+                db,
+                "notes",
+                id
+            )
+
+        );
+
+
+        alert(
+            "🗑 PDF Record Deleted"
+        );
+
+
+        loadPDFs();
+
+
+    }
+
+
+    catch(error){
+
+        console.error(
+            error
+        );
+
+
+        alert(
+            "Delete Error:\n" +
+            error.message
+        );
+
+    }
+
+};
+
+
+
+/* =================================
+   HTML SAFETY
+================================= */
+
+function escapeHtml(text){
+
+    return String(text)
+
+    .replace(
+        /&/g,
+        "&amp;"
+    )
+
+    .replace(
+        /</g,
+        "&lt;"
+    )
+
+    .replace(
+        />/g,
+        "&gt;"
+    )
+
+    .replace(
+        /"/g,
+        "&quot;"
+    )
+
+    .replace(
+        /'/g,
+        "&#039;"
+    );
+
+}
+
 
 </script>
 
+
 </body>
+
 </html>

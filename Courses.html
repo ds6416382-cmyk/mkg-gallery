@@ -4,42 +4,47 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Courses | MKG Coaching Classes</title>
+<title>MKG Coaching Classes | Courses</title>
 
-<link rel="stylesheet" href="style.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Noto+Sans+Devanagari:wght@400;600;700;800&display=swap" rel="stylesheet">
 
 <style>
 *{
-    box-sizing:border-box;
     margin:0;
     padding:0;
-    font-family:'Poppins',sans-serif;
+    box-sizing:border-box;
 }
 
 body{
+    font-family:'Poppins','Noto Sans Devanagari',sans-serif;
     min-height:100vh;
-    padding:30px 15px 60px;
+    color:#fff;
+    padding:15px;
+
     background:
-    radial-gradient(circle at 10% 10%,rgba(255,215,0,.20),transparent 25%),
-    radial-gradient(circle at 90% 80%,rgba(0,130,255,.18),transparent 30%),
-    linear-gradient(135deg,#031b35,#073e69,#02162c);
-    color:white;
+    radial-gradient(circle at 10% 10%,rgba(255,215,0,.16),transparent 28%),
+    radial-gradient(circle at 90% 15%,rgba(0,150,255,.20),transparent 30%),
+    radial-gradient(circle at 50% 100%,rgba(120,0,255,.18),transparent 35%),
+    linear-gradient(135deg,#04101f,#08264a,#020817);
 }
 
 .course-header{
-    max-width:1000px;
+    max-width:1150px;
     margin:auto;
     text-align:center;
-    padding:35px 20px;
+    padding:30px 10px 20px;
 }
 
 .logo-title{
-    font-size:clamp(32px,7vw,60px);
+    font-size:clamp(34px,8vw,68px);
     font-weight:900;
+    line-height:1.1;
+    letter-spacing:1px;
     color:#fff;
+
     text-shadow:
-    0 5px 0 #174b73,
-    0 12px 25px rgba(0,0,0,.7);
+    0 4px 0 #174b9b,
+    0 8px 20px rgba(0,0,0,.7);
 }
 
 .logo-title span{
@@ -47,165 +52,247 @@ body{
 }
 
 .course-subtitle{
-    margin-top:15px;
-    font-size:clamp(20px,4vw,30px);
-    color:#FFD700;
-    font-weight:800;
+    margin-top:10px;
+    font-size:clamp(15px,3vw,22px);
+    font-weight:600;
+    color:#e7f2ff;
 }
 
 .course-line{
-    width:100px;
+    width:120px;
     height:5px;
-    margin:20px auto;
+    margin:17px auto;
     border-radius:20px;
     background:linear-gradient(90deg,#FFD700,#fff,#FFD700);
-    box-shadow:0 0 20px rgba(255,215,0,.6);
+    box-shadow:0 0 18px rgba(255,215,0,.6);
+}
+
+.header-text{
+    color:#b9d4ef;
+    font-size:14px;
 }
 
 .course-grid{
-    max-width:1100px;
-    margin:20px auto 40px;
+    max-width:1150px;
+    margin:25px auto 45px;
+
     display:grid;
     grid-template-columns:repeat(auto-fit,minmax(270px,1fr));
-    gap:30px;
+    gap:22px;
 }
 
 .course-card{
     position:relative;
-    padding:35px 25px;
+    overflow:hidden;
+    padding:25px 20px;
     text-align:center;
-    border-radius:28px;
+    border-radius:24px;
 
     background:
     linear-gradient(
         145deg,
-        rgba(255,255,255,.20),
-        rgba(255,255,255,.06)
+        rgba(255,255,255,.13),
+        rgba(255,255,255,.035)
     );
 
-    border:1px solid rgba(255,255,255,.25);
-
-    backdrop-filter:blur(15px);
-    -webkit-backdrop-filter:blur(15px);
+    border:1px solid rgba(255,255,255,.18);
+    backdrop-filter:blur(14px);
 
     box-shadow:
-    15px 18px 35px rgba(0,0,0,.45),
-    inset 0 1px 0 rgba(255,255,255,.25);
+    0 18px 45px rgba(0,0,0,.38),
+    inset 0 1px 1px rgba(255,255,255,.12);
 
-    transition:.4s ease;
-    overflow:hidden;
-}
-
-.course-card:before{
-    content:"";
-    position:absolute;
-    width:150px;
-    height:150px;
-    border-radius:50%;
-    background:rgba(255,215,0,.15);
-    top:-70px;
-    right:-70px;
+    transition:.35s ease;
 }
 
 .course-card:hover{
-    transform:
-    translateY(-12px)
-    rotateX(3deg)
-    scale(1.02);
+    transform:translateY(-8px);
+}
 
-    box-shadow:
-    20px 28px 45px rgba(0,0,0,.55),
-    0 0 30px rgba(255,215,0,.18);
+.course-card::before{
+    content:"";
+    position:absolute;
+    width:180px;
+    height:180px;
+    top:-90px;
+    right:-90px;
+    background:#FFD700;
+    opacity:.09;
+    border-radius:50%;
 }
 
 .course-icon{
-    font-size:65px;
-    margin-bottom:15px;
-    filter:drop-shadow(0 8px 8px rgba(0,0,0,.5));
+    width:78px;
+    height:78px;
+    margin:0 auto 15px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:22px;
+    font-size:35px;
+
+    background:linear-gradient(145deg,#1769ff,#082e6d);
+
+    border:1px solid rgba(255,255,255,.25);
+
+    box-shadow:
+    0 10px 25px rgba(0,0,0,.35),
+    inset 0 1px 8px rgba(255,255,255,.2);
 }
 
-.course-card h3{
+.course-card h2{
+    font-size:23px;
+    margin-bottom:8px;
+    color:#fff;
+}
+
+.course-card h2 span{
     color:#FFD700;
-    font-size:25px;
-    margin-bottom:15px;
 }
 
 .course-card p{
-    color:#fff;
-    font-size:18px;
-    line-height:1.8;
+    color:#bfd2e7;
+    font-size:13px;
+    line-height:1.7;
+    min-height:45px;
 }
 
-.subject-list{
-    margin-top:15px;
-    color:#dcecff;
-    line-height:2;
-}
-
-.course-button{
+.badge{
     display:inline-block;
-    margin:15px 8px;
-    padding:16px 30px;
-    border-radius:18px;
+    margin:13px 0;
+    padding:5px 13px;
+    border-radius:20px;
+
+    background:rgba(255,215,0,.12);
+    color:#FFD700;
+    border:1px solid rgba(255,215,0,.35);
+
+    font-size:11px;
+    font-weight:700;
+}
+
+.buttons{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin-top:10px;
+}
+
+.btn{
+    min-height:44px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
+
+    border-radius:12px;
     text-decoration:none;
-    font-weight:900;
-    font-size:18px;
 
-    color:#06264b;
+    font-size:13px;
+    font-weight:700;
+
+    transition:.25s ease;
+}
+
+.btn:hover{
+    transform:scale(1.03);
+}
+
+.video-btn{
+    color:#fff;
+    background:linear-gradient(135deg,#e50914,#970007);
+}
+
+.pdf-btn{
+    color:#fff;
+    background:linear-gradient(135deg,#07835e,#04563e);
+}
+
+.join-btn{
+    grid-column:1/-1;
+
+    color:#06101f;
 
     background:
     linear-gradient(
-        145deg,
-        #fff,
-        #dcecff
+        135deg,
+        #FFD700,
+        #fff18a,
+        #FFD700
     );
 
-    box-shadow:
-    0 8px 0 #91a6bd,
-    0 15px 25px rgba(0,0,0,.4);
-
-    transition:.25s;
+    box-shadow:0 7px 18px rgba(255,215,0,.20);
 }
 
-.course-button:hover{
-    transform:translateY(-5px);
-    box-shadow:
-    0 13px 0 #91a6bd,
-    0 22px 35px rgba(0,0,0,.5);
-}
+.no-course{
+    max-width:600px;
+    margin:50px auto;
+    padding:35px 20px;
 
-.admission-button{
-    background:
-    linear-gradient(
-        145deg,
-        #ffe52b,
-        #ffb900
-    );
-}
-
-.bottom-area{
     text-align:center;
-    margin-top:20px;
+
+    border-radius:25px;
+
+    background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.15);
+
+    color:#c9d8e8;
+}
+
+.loading{
+    text-align:center;
+    padding:40px;
+    color:#FFD700;
+    font-size:18px;
+}
+
+.footer{
+    max-width:900px;
+    margin:20px auto;
+    padding:20px;
+    text-align:center;
+
+    border-top:1px solid rgba(255,255,255,.12);
+
+    color:#9bb3cc;
+    font-size:13px;
+}
+
+.footer strong{
+    color:#FFD700;
 }
 
 @media(max-width:600px){
 
     body{
-        padding:15px 10px 50px;
+        padding:9px;
     }
 
     .course-header{
-        padding:25px 10px;
+        padding:25px 7px 15px;
+    }
+
+    .course-grid{
+        grid-template-columns:1fr;
+        gap:18px;
     }
 
     .course-card{
-        padding:30px 20px;
+        padding:24px 18px;
+    }
+}
+
+@media(max-width:360px){
+
+    .buttons{
+        grid-template-columns:1fr;
     }
 
-    .course-button{
-        display:block;
-        width:90%;
-        margin:15px auto;
+    .join-btn{
+        grid-column:auto;
     }
 }
 </style>
@@ -213,123 +300,402 @@ body{
 
 <body>
 
-<div class="course-header">
+<header class="course-header">
 
-<h1 class="logo-title">
-MKG <span>COACHING CLASSES</span>
-</h1>
+    <div class="logo-title">
+        MKG <span>COACHING</span>
+    </div>
 
-<h2 class="course-subtitle">
-📚 हमारे Courses
-</h2>
+    <div class="course-subtitle">
+        🎓 गुणवत्तापूर्ण शिक्षा • बेहतर भविष्य
+    </div>
 
-<div class="course-line"></div>
+    <div class="course-line"></div>
 
-<p>
-🎓 कक्षा 6 से 12 तक गुणवत्तापूर्ण शिक्षा
-</p>
+    <p class="header-text">
+        Class 6th से Class 12th तक Online Courses
+    </p>
 
-</div>
+</header>
 
+<section class="course-grid" id="courseGrid">
 
-<div class="course-grid">
+    <div class="loading">
+        ⏳ Courses Loading...
+    </div>
 
+</section>
 
-<!-- CLASS 6-8 -->
+<footer class="footer">
 
-<div class="course-card">
+    © 2026
+    <strong>MKG Coaching Classes</strong>
 
-<div class="course-icon">
-📘
-</div>
+    <br>
 
-<h3>
-कक्षा 6 से 8
-</h3>
+    गुणवत्तापूर्ण शिक्षा • उज्जवल भविष्य
 
-<p>
-सभी विषय
-</p>
-
-<div class="subject-list">
-📖 हिन्दी<br>
-📐 Maths<br>
-🔬 Science<br>
-🇬🇧 English<br>
-🌍 Social Science
-</div>
-
-</div>
+</footer>
 
 
-<!-- CLASS 9-10 -->
+<script type="module">
 
-<div class="course-card">
+import { db } from "./firebase.js";
 
-<div class="course-icon">
-📗
-</div>
-
-<h3>
-कक्षा 9 से 10
-</h3>
-
-<p>
-मुख्य विषय
-</p>
-
-<div class="subject-list">
-📐 Maths<br>
-🔬 Science<br>
-🇬🇧 English<br>
-🌍 Social Science
-</div>
-
-</div>
+import {
+    collection,
+    getDocs
+} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
 
 
-<!-- CLASS 11-12 -->
-
-<div class="course-card">
-
-<div class="course-icon">
-📕
-</div>
-
-<h3>
-कक्षा 11 से 12
-</h3>
-
-<p>
-Science एवं Commerce
-</p>
-
-<div class="subject-list">
-🔬 Science Stream<br>
-💼 Commerce Stream<br>
-📐 Maths<br>
-🇬🇧 English
-</div>
-
-</div>
-
-</div>
+const courseGrid = document.getElementById("courseGrid");
 
 
-<div class="bottom-area">
+const icons = {
+    "6":"📚",
+    "7":"📘",
+    "8":"📗",
+    "9":"📕",
+    "10":"🎓",
+    "11":"🧪",
+    "12":"🏆"
+};
 
-<a href="admission.html"
-class="course-button admission-button">
-📝 Admission Now
-</a>
 
-<a href="index.html"
-class="course-button">
-🏠 Home Page
-</a>
+const badges = {
+    "6":"📖 Complete Notes",
+    "7":"⭐ Study Material",
+    "8":"🎯 Exam Preparation",
+    "9":"🔥 Important Course",
+    "10":"🏆 Board Preparation",
+    "11":"💡 Concept Learning",
+    "12":"🏆 Special Batch"
+};
 
-</div>
 
+async function loadCourses(){
+
+    try{
+
+        const snapshot = await getDocs(
+            collection(db,"courses")
+        );
+
+
+        const courses = [];
+
+
+        snapshot.forEach((docSnap)=>{
+
+            const data = docSnap.data();
+
+
+            /*
+             * Admin Panel में हमारा field:
+             * active: true / false
+             *
+             * पुराने data में अगर status मौजूद हो
+             * तो उसे भी support करेंगे।
+             */
+
+            const isActive =
+                data.active === true ||
+                data.status === "Active";
+
+
+            if(!isActive){
+                return;
+            }
+
+
+            courses.push({
+
+                id: docSnap.id,
+
+                ...data
+
+            });
+
+        });
+
+
+        /*
+         * Class 6 → 7 → 8 → ... 12
+         */
+
+        courses.sort((a,b)=>{
+
+            return Number(a.className || 0)
+                 - Number(b.className || 0);
+
+        });
+
+
+        courseGrid.innerHTML = "";
+
+
+        if(courses.length === 0){
+
+            courseGrid.innerHTML = `
+
+                <div class="no-course">
+
+                    <div style="font-size:60px;">
+                        📚
+                    </div>
+
+                    <h2 style="margin:15px 0;color:#fff;">
+                        अभी कोई Course उपलब्ध नहीं है
+                    </h2>
+
+                    <p>
+                        Admin Panel से Course Add करें।
+                    </p>
+
+                </div>
+
+            `;
+
+            return;
+
+        }
+
+
+        courses.forEach((data)=>{
+
+
+            const classNumber =
+                data.className ||
+                data.class ||
+                data.name ||
+                data.id;
+
+
+            const classTitle =
+                "Class " + classNumber + "th";
+
+
+            const description =
+                data.description ||
+                "इस Course की पूरी जानकारी और Study Material उपलब्ध है।";
+
+
+            /*
+             * हमारे Admin Panel के सही fields
+             */
+
+            const video =
+                data.videoUrl || "";
+
+
+            const pdf =
+                data.pdfUrl || "";
+
+
+            const icon =
+                icons[String(classNumber)] || "📚";
+
+
+            const badge =
+                badges[String(classNumber)] ||
+                "📖 Study Material";
+
+
+            let videoButton;
+
+
+            if(video){
+
+                videoButton = `
+
+                    <a href="${video}"
+                       class="btn video-btn"
+                       target="_blank"
+                       rel="noopener noreferrer">
+
+                       ▶ Video
+
+                    </a>
+
+                `;
+
+            }else{
+
+                videoButton = `
+
+                    <a href="#"
+                       class="btn video-btn"
+                       onclick="
+                       alert('इस Course का Video अभी उपलब्ध नहीं है');
+                       return false;
+                       ">
+
+                       ▶ Video
+
+                    </a>
+
+                `;
+
+            }
+
+
+            let pdfButton;
+
+
+            if(pdf){
+
+                pdfButton = `
+
+                    <a href="${pdf}"
+                       class="btn pdf-btn"
+                       target="_blank"
+                       rel="noopener noreferrer">
+
+                       📄 PDF Notes
+
+                    </a>
+
+                `;
+
+            }else{
+
+                pdfButton = `
+
+                    <a href="#"
+                       class="btn pdf-btn"
+                       onclick="
+                       alert('इस Course की PDF अभी उपलब्ध नहीं है');
+                       return false;
+                       ">
+
+                       📄 PDF Notes
+
+                    </a>
+
+                `;
+
+            }
+
+
+            const card =
+                document.createElement("div");
+
+
+            card.className =
+                "course-card";
+
+
+            card.innerHTML = `
+
+                <div class="course-icon">
+
+                    ${icon}
+
+                </div>
+
+
+                <h2>
+
+                    Class
+                    <span>${classNumber}th</span>
+
+                </h2>
+
+
+                <p>
+
+                    ${description}
+
+                </p>
+
+
+                <div class="badge">
+
+                    ${badge}
+
+                </div>
+
+
+                <div class="buttons">
+
+                    ${videoButton}
+
+                    ${pdfButton}
+
+
+                    <a href="admission.html"
+                       class="btn join-btn">
+
+                       🚀 Join Course
+
+                    </a>
+
+                </div>
+
+            `;
+
+
+            courseGrid.appendChild(card);
+
+        });
+
+
+    }
+
+    catch(error){
+
+        console.error(
+            "Courses Error:",
+            error
+        );
+
+
+        courseGrid.innerHTML = `
+
+            <div class="no-course">
+
+                <div style="font-size:60px;">
+                    ⚠️
+                </div>
+
+
+                <h2 style="color:#FFD700;margin:15px 0;">
+
+                    Courses Load नहीं हो पाए
+
+                </h2>
+
+
+                <p>
+
+                    Firebase connection या
+                    Firestore में समस्या है।
+
+                </p>
+
+
+                <p style="
+                    margin-top:15px;
+                    font-size:12px;
+                    color:#9bb3cc;
+                ">
+
+                    ${error.message}
+
+                </p>
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+loadCourses();
+
+</script>
 
 </body>
 </html>

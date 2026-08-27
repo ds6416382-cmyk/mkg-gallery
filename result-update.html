@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="hi">
+
 <head>
 
 <meta charset="UTF-8">
@@ -9,59 +10,214 @@
 
 <link rel="stylesheet" href="Style.css">
 
+<style>
+
+.result-box{
+    max-width:700px;
+    margin:30px auto;
+    padding:25px;
+    background:#fff;
+    border-radius:20px;
+    box-shadow:0 8px 25px rgba(0,0,0,.15);
+}
+
+.result-box input{
+    width:100%;
+    padding:13px;
+    margin:8px 0;
+    border:1px solid #ccd6e5;
+    border-radius:10px;
+    font-size:16px;
+    box-sizing:border-box;
+}
+
+.student-preview{
+    display:none;
+    margin:20px 0;
+    padding:15px;
+    background:#eef8ff;
+    border-radius:15px;
+    text-align:center;
+}
+
+.student-photo{
+    width:150px;
+    height:190px;
+    object-fit:cover;
+    border-radius:15px;
+    border:4px solid #ffd000;
+    display:block;
+    margin:0 auto 12px;
+}
+
+.student-preview h3{
+    color:#063b70;
+}
+
+.message{
+    text-align:center;
+    font-weight:bold;
+    margin:15px 0;
+}
+
+.success{
+    color:#08752c;
+}
+
+.error{
+    color:#d00000;
+}
+
+.saved-result{
+    background:#f8fbff;
+    padding:18px;
+    margin:15px 0;
+    border-radius:15px;
+    border:1px solid #dde8f5;
+}
+
+.result-photo{
+    width:100px;
+    height:125px;
+    object-fit:cover;
+    border-radius:10px;
+    border:3px solid #ffd000;
+    display:block;
+    margin-bottom:10px;
+}
+
+</style>
+
 </head>
 
+
 <body>
+
 
 <h1 style="text-align:center;margin-top:30px;">
 🏆 Result Update
 </h1>
 
-<div class="card" style="max-width:650px;margin:30px auto;">
 
-<h3>📊 Add Student Result</h3>
+<div class="result-box">
+
+<h3>
+📊 Add Student Result
+</h3>
+
+
+<!-- STUDENT ID -->
+
+<input
+id="studentId"
+type="text"
+placeholder="🆔 Student ID जैसे MKG12345"
+>
+
+
+<button
+class="btn"
+id="findStudent"
+style="margin-top:8px;">
+
+🔍 Find Student
+
+</button>
+
+
+<!-- STUDENT PREVIEW -->
+
+<div
+id="studentPreview"
+class="student-preview">
+
+<img
+id="studentPhoto"
+class="student-photo"
+alt="Student Photo"
+>
+
+<h3 id="previewName">
+</h3>
+
+<p id="previewClass">
+</p>
+
+</div>
+
+
+<!-- RESULT DETAILS -->
 
 <input
 id="studentName"
 type="text"
 placeholder="विद्यार्थी का नाम"
-style="width:100%;padding:12px;margin:8px 0;border-radius:10px;">
+readonly
+>
+
 
 <input
 id="studentClass"
 type="text"
 placeholder="कक्षा"
-style="width:100%;padding:12px;margin:8px 0;border-radius:10px;">
+readonly
+>
+
 
 <input
 id="examName"
 type="text"
 placeholder="परीक्षा का नाम"
-style="width:100%;padding:12px;margin:8px 0;border-radius:10px;">
+>
+
 
 <input
 id="marks"
 type="number"
 placeholder="प्राप्त अंक"
-style="width:100%;padding:12px;margin:8px 0;border-radius:10px;">
+min="0"
+>
+
 
 <input
 id="totalMarks"
 type="number"
 placeholder="कुल अंक"
-style="width:100%;padding:12px;margin:8px 0;border-radius:10px;">
+min="1"
+>
+
 
 <br><br>
 
-<button class="btn" id="saveResult">
+
+<button
+class="btn"
+id="saveResult">
+
 💾 Save Result
+
 </button>
+
+
+<div
+id="message"
+class="message">
 
 </div>
 
-<div class="card" style="max-width:700px;margin:30px auto;">
+</div>
 
-<h3>📋 Saved Results</h3>
+
+
+<!-- SAVED RESULTS -->
+
+<div
+class="result-box">
+
+<h3>
+📋 Saved Results
+</h3>
+
 
 <div id="resultList">
 
@@ -71,9 +227,12 @@ Loading...
 
 </div>
 
+
 <p style="text-align:center;">
 
-<a href="admin.html" class="btn">
+<a
+href="admin.html"
+class="btn">
 
 ⬅ Back to Admin Panel
 
@@ -81,9 +240,13 @@ Loading...
 
 </p>
 
+
+
 <script type="module">
 
+
 import { db } from "./firebase.js";
+
 
 import {
 
@@ -94,157 +257,833 @@ getDocs,
 query,
 orderBy,
 deleteDoc,
-doc
+doc,
+where
 
 }
 
-from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
-// SAVE RESULT
+from
 
-document.getElementById("saveResult").addEventListener("click", async () => {
+"https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
 
-const studentName=document.getElementById("studentName").value.trim();
-const studentClass=document.getElementById("studentClass").value.trim();
-const examName=document.getElementById("examName").value.trim();
-const marks=document.getElementById("marks").value;
-const totalMarks=document.getElementById("totalMarks").value;
 
-if(!studentName||!studentClass||!examName||!marks||!totalMarks){
 
-alert("कृपया सभी जानकारी भरें।");
+/* =================================
+   ELEMENTS
+================================= */
 
-return;
+const studentIdInput =
+document.getElementById(
+    "studentId"
+);
 
-}
+const findStudentBtn =
+document.getElementById(
+    "findStudent"
+);
 
-const percentage=((Number(marks)/Number(totalMarks))*100).toFixed(2);
+const studentPreview =
+document.getElementById(
+    "studentPreview"
+);
 
-try{
+const studentPhoto =
+document.getElementById(
+    "studentPhoto"
+);
 
-await addDoc(collection(db,"results"),{
+const previewName =
+document.getElementById(
+    "previewName"
+);
 
-studentName,
-studentClass,
-examName,
-marks:Number(marks),
-totalMarks:Number(totalMarks),
-percentage:Number(percentage),
-createdAt:serverTimestamp()
+const previewClass =
+document.getElementById(
+    "previewClass"
+);
+
+const studentName =
+document.getElementById(
+    "studentName"
+);
+
+const studentClass =
+document.getElementById(
+    "studentClass"
+);
+
+const examName =
+document.getElementById(
+    "examName"
+);
+
+const marks =
+document.getElementById(
+    "marks"
+);
+
+const totalMarks =
+document.getElementById(
+    "totalMarks"
+);
+
+const saveResult =
+document.getElementById(
+    "saveResult"
+);
+
+const message =
+document.getElementById(
+    "message"
+);
+
+const resultList =
+document.getElementById(
+    "resultList"
+);
+
+
+
+/* =================================
+   FIND STUDENT
+================================= */
+
+findStudentBtn.addEventListener(
+"click",
+async function(){
+
+    const studentId =
+    studentIdInput.value
+    .trim();
+
+
+    if(!studentId){
+
+        showMessage(
+            "⚠️ पहले Student ID डालें।",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    findStudentBtn.disabled =
+    true;
+
+    findStudentBtn.innerText =
+    "⏳ खोज रहे हैं...";
+
+
+    studentPreview.style.display =
+    "none";
+
+
+    try{
+
+
+        const q =
+        query(
+
+            collection(
+                db,
+                "studentRegistrations"
+            ),
+
+            where(
+                "studentId",
+                "==",
+                studentId
+            ),
+
+            where(
+                "status",
+                "==",
+                "approved"
+            )
+
+        );
+
+
+        const snapshot =
+        await getDocs(q);
+
+
+        if(snapshot.empty){
+
+            throw new Error(
+                "यह Student ID नहीं मिली या Student अभी Approved नहीं है।"
+            );
+
+        }
+
+
+        const studentDoc =
+        snapshot.docs[0];
+
+
+        const data =
+        studentDoc.data();
+
+
+        /* =========================
+           STUDENT INFORMATION
+        ========================= */
+
+        studentName.value =
+        data.studentName || "";
+
+
+        studentClass.value =
+        data.studentClass || "";
+
+
+        previewName.innerText =
+        "👤 " +
+        (data.studentName || "Student");
+
+
+        previewClass.innerText =
+        "🎓 " +
+        (data.studentClass || "");
+
+
+        if(data.photoURL){
+
+            studentPhoto.src =
+            data.photoURL;
+
+            studentPhoto.style.display =
+            "block";
+
+        }
+        else{
+
+            studentPhoto.removeAttribute(
+                "src"
+            );
+
+            studentPhoto.style.display =
+            "none";
+
+        }
+
+
+        studentPreview.style.display =
+        "block";
+
+
+        showMessage(
+            "✅ Student मिल गया। अब Result की जानकारी भरें।",
+            "success"
+        );
+
+
+    }
+
+    catch(error){
+
+        console.error(
+            "Find Student Error:",
+            error
+        );
+
+
+        showMessage(
+            "❌ " + error.message,
+            "error"
+        );
+
+
+        studentName.value =
+        "";
+
+        studentClass.value =
+        "";
+
+    }
+
+
+    finally{
+
+        findStudentBtn.disabled =
+        false;
+
+        findStudentBtn.innerText =
+        "🔍 Find Student";
+
+    }
 
 });
 
-alert("✅ Result सफलतापूर्वक Save हो गया!");
 
-document.getElementById("studentName").value="";
-document.getElementById("studentClass").value="";
-document.getElementById("examName").value="";
-document.getElementById("marks").value="";
-document.getElementById("totalMarks").value="";
 
-loadResults();
+/* =================================
+   SAVE RESULT
+================================= */
 
-}catch(error){
+saveResult.addEventListener(
+"click",
+async function(){
 
-console.error(error);
 
-alert("❌ Result Save नहीं हुआ।");
+    const studentId =
+    studentIdInput.value
+    .trim();
 
-}
+
+    const name =
+    studentName.value
+    .trim();
+
+
+    const cls =
+    studentClass.value
+    .trim();
+
+
+    const exam =
+    examName.value
+    .trim();
+
+
+    const obtained =
+    Number(
+        marks.value
+    );
+
+
+    const total =
+    Number(
+        totalMarks.value
+    );
+
+
+    if(
+        !studentId ||
+        !name ||
+        !cls ||
+        !exam ||
+        !marks.value ||
+        !totalMarks.value
+    ){
+
+        showMessage(
+            "⚠️ कृपया सभी जानकारी भरें।",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    if(total <= 0){
+
+        showMessage(
+            "❌ कुल अंक 0 से अधिक होने चाहिए।",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    if(obtained < 0 || obtained > total){
+
+        showMessage(
+            "❌ प्राप्त अंक कुल अंकों से अधिक नहीं हो सकते।",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    saveResult.disabled =
+    true;
+
+    saveResult.innerText =
+    "⏳ Result Save हो रहा है...";
+
+
+    try{
+
+
+        /* =========================
+           GET STUDENT AGAIN
+        ========================= */
+
+        const studentQuery =
+        query(
+
+            collection(
+                db,
+                "studentRegistrations"
+            ),
+
+            where(
+                "studentId",
+                "==",
+                studentId
+            ),
+
+            where(
+                "status",
+                "==",
+                "approved"
+            )
+
+        );
+
+
+        const studentSnapshot =
+        await getDocs(
+            studentQuery
+        );
+
+
+        if(studentSnapshot.empty){
+
+            throw new Error(
+                "Student ID Verify नहीं हो सकी।"
+            );
+
+        }
+
+
+        const studentData =
+        studentSnapshot
+        .docs[0]
+        .data();
+
+
+        const percentage =
+        (
+            obtained /
+            total *
+            100
+        ).toFixed(2);
+
+
+        /* =========================
+           SAVE RESULT
+        ========================= */
+
+        await addDoc(
+
+            collection(
+                db,
+                "results"
+            ),
+
+            {
+
+                studentId:
+                studentId,
+
+                studentName:
+                studentData.studentName,
+
+                studentClass:
+                studentData.studentClass,
+
+                examName:
+                exam,
+
+                marks:
+                obtained,
+
+                totalMarks:
+                total,
+
+                percentage:
+                Number(percentage),
+
+                photoURL:
+                studentData.photoURL || "",
+
+                createdAt:
+                serverTimestamp()
+
+            }
+
+        );
+
+
+        showMessage(
+            "🎉 Result सफलतापूर्वक Save हो गया!",
+            "success"
+        );
+
+
+        /* =========================
+           CLEAR RESULT FIELDS
+        ========================= */
+
+        examName.value =
+        "";
+
+        marks.value =
+        "";
+
+        totalMarks.value =
+        "";
+
+
+        loadResults();
+
+
+    }
+
+    catch(error){
+
+        console.error(
+            "Save Result Error:",
+            error
+        );
+
+
+        showMessage(
+            "❌ Result Save नहीं हुआ: " +
+            error.message,
+            "error"
+        );
+
+    }
+
+
+    finally{
+
+        saveResult.disabled =
+        false;
+
+        saveResult.innerText =
+        "💾 Save Result";
+
+    }
 
 });
 
 
-// LOAD RESULTS
+
+/* =================================
+   LOAD RESULTS
+================================= */
 
 async function loadResults(){
 
-const resultList=document.getElementById("resultList");
+    resultList.innerHTML =
+    "⏳ Results Loading...";
 
-resultList.innerHTML="";
-try{
 
-const q=query(
-collection(db,"results"),
-orderBy("percentage","desc")
-);
+    try{
 
-const snapshot=await getDocs(q);
 
-if(snapshot.empty){
+        const q =
+        query(
 
-resultList.innerHTML="<p>अभी कोई Result उपलब्ध नहीं है।</p>";
-return;
+            collection(
+                db,
+                "results"
+            ),
+
+            orderBy(
+                "percentage",
+                "desc"
+            )
+
+        );
+
+
+        const snapshot =
+        await getDocs(q);
+
+
+        if(snapshot.empty){
+
+            resultList.innerHTML =
+            "<p>अभी कोई Result उपलब्ध नहीं है।";
+
+            return;
+
+        }
+
+
+        resultList.innerHTML =
+        "";
+
+
+        snapshot.forEach(
+        function(resultDoc){
+
+
+            const data =
+            resultDoc.data();
+
+
+            const box =
+            document.createElement(
+                "div"
+            );
+
+
+            box.className =
+            "saved-result";
+
+
+            let photoHTML =
+            "";
+
+
+            if(data.photoURL){
+
+                photoHTML = `
+
+                <img
+
+                    src="${escapeHTML(
+                        data.photoURL
+                    )}"
+
+                    class="result-photo"
+
+                    alt="Student Photo"
+
+                    onerror="
+                        this.style.display='none'
+                    "
+
+                >
+
+                `;
+
+            }
+
+
+            box.innerHTML = `
+
+                ${photoHTML}
+
+                <h3>
+                🏆 ${escapeHTML(
+                    data.studentName || "-"
+                )}
+                </h3>
+
+                <p>
+                🆔 <strong>Student ID:</strong>
+                ${escapeHTML(
+                    data.studentId || "-"
+                )}
+                </p>
+
+                <p>
+                🎓 <strong>कक्षा:</strong>
+                ${escapeHTML(
+                    data.studentClass || "-"
+                )}
+                </p>
+
+                <p>
+                📝 <strong>परीक्षा:</strong>
+                ${escapeHTML(
+                    data.examName || "-"
+                )}
+                </p>
+
+                <p>
+                📊 <strong>अंक:</strong>
+                ${data.marks || 0}
+                /
+                ${data.totalMarks || 0}
+                </p>
+
+                <p>
+                🥇 <strong>प्रतिशत:</strong>
+                ${data.percentage || 0}%
+                </p>
+
+            `;
+
+
+            const deleteBtn =
+            document.createElement(
+                "button"
+            );
+
+
+            deleteBtn.className =
+            "btn";
+
+
+            deleteBtn.style.background =
+            "#dc3545";
+
+
+            deleteBtn.style.marginTop =
+            "10px";
+
+
+            deleteBtn.textContent =
+            "🗑 Delete";
+
+
+            deleteBtn.onclick =
+            async function(){
+
+
+                if(
+                    !confirm(
+                        "क्या आप यह Result Delete करना चाहते हैं?"
+                    )
+                ){
+
+                    return;
+
+                }
+
+
+                try{
+
+
+                    await deleteDoc(
+
+                        doc(
+                            db,
+                            "results",
+                            resultDoc.id
+                        )
+
+                    );
+
+
+                    alert(
+                        "🗑 Result Delete हो गया।"
+                    );
+
+
+                    loadResults();
+
+
+                }
+
+                catch(error){
+
+                    console.error(
+                        error
+                    );
+
+
+                    alert(
+                        "❌ Result Delete नहीं हुआ।"
+                    );
+
+                }
+
+            };
+
+
+            box.appendChild(
+                deleteBtn
+            );
+
+
+            resultList.appendChild(
+                box
+            );
+
+        });
+
+
+    }
+
+    catch(error){
+
+        console.error(
+            "Load Results Error:",
+            error
+        );
+
+
+        resultList.innerHTML =
+        "<p>❌ Result Load नहीं हुआ।</p>";
+
+    }
 
 }
 
-snapshot.forEach((resultDoc)=>{
 
-const data=resultDoc.data();
 
-const box=document.createElement("div");
+/* =================================
+   MESSAGE
+================================= */
 
-box.className="card";
+function showMessage(
+    text,
+    type
+){
 
-box.style.marginBottom="15px";
+    message.innerText =
+    text;
 
-box.innerHTML=`
-<h3>🏆 ${data.studentName}</h3>
-<p>🏫 कक्षा : ${data.studentClass}</p>
-<p>📝 परीक्षा : ${data.examName}</p>
-<p>📊 अंक : ${data.marks} / ${data.totalMarks}</p>
-<p>🥇 प्रतिशत : ${data.percentage}%</p>
-`;
-
-const deleteBtn=document.createElement("button");
-
-deleteBtn.className="btn";
-deleteBtn.style.background="#dc3545";
-deleteBtn.style.marginTop="10px";
-deleteBtn.textContent="🗑 Delete";
-
-deleteBtn.onclick=async()=>{
-
-if(confirm("क्या आप यह Result Delete करना चाहते हैं?")){
-
-try{
-
-await deleteDoc(doc(db,"results",resultDoc.id));
-
-alert("🗑 Result Delete हो गया।");
-
-loadResults();
-
-}catch(error){
-
-console.error(error);
-
-alert("❌ Result Delete नहीं हुआ।");
+    message.className =
+    "message " +
+    type;
 
 }
 
+
+
+/* =================================
+   HTML SECURITY
+================================= */
+
+function escapeHTML(value){
+
+    return String(value)
+
+    .replace(
+        /&/g,
+        "&amp;"
+    )
+
+    .replace(
+        /</g,
+        "&lt;"
+    )
+
+    .replace(
+        />/g,
+        "&gt;"
+    )
+
+    .replace(
+        /"/g,
+        "&quot;"
+    )
+
+    .replace(
+        /'/g,
+        "&#039;"
+    );
+
 }
 
-};
 
-box.appendChild(deleteBtn);
 
-resultList.appendChild(box);
-
-});
-
-}catch(error){
-
-console.error(error);
-
-resultList.innerHTML="<p>❌ Result Load नहीं हुआ।</p>";
-
-}
-
-}
+/* =================================
+   START
+================================= */
 
 loadResults();
 
 </script>
 
+
 </body>
+
 </html>
