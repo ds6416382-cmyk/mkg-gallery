@@ -1,22 +1,16 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-
 import { getFirestore } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
-
-import { getStorage } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-storage.js";
+import { getAuth } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDwC3Q2QmkEkx-0l3-YqizjrW7mEaEdAdc",
-  authDomain: "mkg-coaching-classes.firebaseapp.com",
-  projectId: "mkg-coaching-classes",
-  storageBucket: "mkg-coaching-classes.firebasestorage.app",
-  messagingSenderId: "257709307338",
-  appId: "1:257709307338:web:5f81578963e92274350b33"
+  apiKey: "AIzaSyByQ5O05UN8l0bwu2QwS0V1ind2ZCbh6V4",
+  authDomain: "mkg-digital-learning.firebaseapp.com",
+  projectId: "mkg-digital-learning",
+  storageBucket: "mkg-digital-learning.firebasestorage.app",
+  messagingSenderId: "1084828404391",
+  appId: "1:1084828404391:web:9e0b2a8c2e5c1f6c3c3c3c"
 };
 
 const app = initializeApp(firebaseConfig);
-
-const db = getFirestore(app);
-
-const storage = getStorage(app);
-
-export { app, db, storage };
+export const db = getFirestore(app);
+export const auth = getAuth(app);
